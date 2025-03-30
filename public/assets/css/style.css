@@ -1,0 +1,62 @@
+h1,h2,h3,h4,h5{
+    font-family: "Teko", sans-serif;
+}
+
+.btn {
+    font-family: "Teko", sans-serif !important;
+}
+p {
+    font-family: Roboto, serif !important;
+}
+.btn-outline-light {
+    color: #e3d8f1 !important; /* Couleur du texte normale */
+    border-color: #efca08 !important; /* Couleur de la bordure normale */
+}
+
+.btn-outline-light:hover {
+    color: #333 !important; /* Couleur du texte lors du survol */
+    background-color: #efca08 !important; /* Couleur de fond lors du survol */
+    border-color: #0e9594 !important; /* Couleur de la bordure lors du survol */
+}
+
+
+.header-title{
+    font-size: 8vw !important;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.header-subtitle{
+    font-size: 3vw !important;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.bg-pitch-black{
+
+    background-color: #011627 !important;
+}
+
+@keyframes breathe {
+    0% {
+        text-shadow: 0 0 1px rgb(239, 202, 8), 0 0 1px rgb(239, 202, 8);
+    }
+    50% {
+        text-shadow: 0 0 3px rgb(239, 202, 8), 0 0 3px rgb(239, 202, 8);
+    }
+    100% {
+        text-shadow: 0 0 1px rgb(239, 202, 8), 0 0 1px rgb(239, 202, 8);
+    }
+}
+
+@keyframes spawn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+
+}
+
+.breathing {
+    animation: breathe 5s infinite, spawn 3s normal;
+}

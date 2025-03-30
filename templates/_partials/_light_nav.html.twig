@@ -1,0 +1,48 @@
+<style>
+    .navbar {
+        backdrop-filter: blur(5px);
+        border-radius: 20px;
+
+    }
+
+    .navbar a {
+        margin: 0 15px;
+        font-size: 1.5rem;
+    }
+
+    a {
+        font-family: "Roboto Condensed", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+    }
+    .navbar a:hover {
+        color: #efca08 !important;
+        text-shadow: 0px 0px 5px #0E9594
+        /*-1px -1px 0 #0E9594,*/
+        /*1px -1px 0 #0E9594,*/
+        /*-1px 1px 0 #0E9594;*/
+    }
+
+</style>
+
+<header class="fixed-top d-flex justify-content-center mt-3">
+    <nav class="navbar">
+        <a class="nav-link fw-bold" href="#home">HOME</a>
+        <a class="nav-link fw-bold" href="#work">WORK</a>
+        <a class="nav-link fw-bold" href="#about">ABOUT</a>
+    </nav>
+</header>
+
+<script>
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+

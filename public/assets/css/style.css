@@ -10,23 +10,24 @@ p {
 }
 .btn-outline-light {
     color: #e3d8f1 !important; /* Couleur du texte normale */
-    border-color: #efca08 !important; /* Couleur de la bordure normale */
+    border-color: #000000 !important; /* Couleur de la bordure normale */
 }
 
 .btn-outline-light:hover {
-    color: #333 !important; /* Couleur du texte lors du survol */
-    background-color: #efca08 !important; /* Couleur de fond lors du survol */
-    border-color: #0e9594 !important; /* Couleur de la bordure lors du survol */
+    background-color: #FF5A5F !important; /* Couleur de fond lors du survol */
+    border-color: #7B6D8D !important; /* Couleur de la bordure lors du survol */
 }
 
 
 .header-title{
-    font-size: 8vw !important;
+    font-size: 4vw !important;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+    margin-top: 10vh !important;
+    /*max-height: 5vh !important;*/
 }
 
 .header-subtitle{
-    font-size: 3vw !important;
+    /*font-size: 1.5vw !important;*/
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
 }
 
@@ -37,13 +38,13 @@ p {
 
 @keyframes breathe {
     0% {
-        text-shadow: 0 0 1px rgb(239, 202, 8), 0 0 1px rgb(239, 202, 8);
+        text-shadow: 0 0 0px rgb(255, 90, 95), 0 0 0px rgb(255, 90, 95);
     }
     50% {
-        text-shadow: 0 0 3px rgb(239, 202, 8), 0 0 3px rgb(239, 202, 8);
+        text-shadow: 0 0 3px rgb(255, 90, 95), 0 0 3px rgb(255, 90, 95);
     }
     100% {
-        text-shadow: 0 0 1px rgb(239, 202, 8), 0 0 1px rgb(239, 202, 8);
+        text-shadow: 0 0 0px rgb(255, 90, 95), 0 0 0px rgb(255, 90, 95);
     }
 }
 

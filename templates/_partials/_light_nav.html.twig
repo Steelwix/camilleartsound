@@ -16,8 +16,8 @@
         font-style: normal;
     }
     .navbar a:hover {
-        color: #efca08 !important;
-        text-shadow: 0px 0px 5px #0E9594
+        color: #ff5a5f !important;
+        text-shadow: 0px 0px 5px #7b6d8d
         /*-1px -1px 0 #0E9594,*/
         /*1px -1px 0 #0E9594,*/
         /*-1px 1px 0 #0E9594;*/
@@ -29,7 +29,7 @@
     <nav class="navbar">
         <a class="nav-link fw-bold" href="#home">HOME</a>
         <a class="nav-link fw-bold" href="#work">WORK</a>
-        <a class="nav-link fw-bold" href="#about">ABOUT</a>
+        <a href="{{ path('app_home_about') }}" class="nav-link fw-bold" data-turbo="onClick">ABOUT</a>
     </nav>
 </header>
 

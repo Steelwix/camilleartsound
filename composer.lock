@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1e307b5628f7bfa6cdaae8d8200f4b9b",
+    "content-hash": "60d5c0362b91e917edc00e02fcb1822b",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -5327,16 +5327,16 @@
         },
         {
             "name": "symfony/ux-turbo",
-            "version": "v2.23.0",
+            "version": "v2.25.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-turbo.git",
-                "reference": "db96cf04d70a8c820671ce55530e8bf641ada33f"
+                "reference": "11ebca138005c7e25678c3f98a07ddf718a0480c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/db96cf04d70a8c820671ce55530e8bf641ada33f",
-                "reference": "db96cf04d70a8c820671ce55530e8bf641ada33f",
+                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/11ebca138005c7e25678c3f98a07ddf718a0480c",
+                "reference": "11ebca138005c7e25678c3f98a07ddf718a0480c",
                 "shasum": ""
             },
             "require": {
@@ -5405,7 +5405,7 @@
                 "turbo-stream"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo/tree/v2.23.0"
+                "source": "https://github.com/symfony/ux-turbo/tree/v2.25.2"
             },
             "funding": [
                 {
@@ -5421,7 +5421,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-06T08:47:30+00:00"
+            "time": "2025-05-19T11:54:27+00:00"
         },
         {
             "name": "symfony/validator",

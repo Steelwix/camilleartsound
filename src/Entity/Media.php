@@ -20,6 +20,9 @@ class Media
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $selectedWork = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -45,6 +48,18 @@ class Media
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getSelectedWork(): ?int
+    {
+        return $this->selectedWork;
+    }
+
+    public function setSelectedWork(?int $selectedWork): static
+    {
+        $this->selectedWork = $selectedWork;
 
         return $this;
     }

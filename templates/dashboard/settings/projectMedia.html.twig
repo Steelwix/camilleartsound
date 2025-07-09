@@ -1,0 +1,34 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div id="dashboard">
+        {% set total = projectDisplay %}
+        {% set perRow = projectPerRow %}
+
+        {% for i in 0..(total - 1) %}
+            {% if i % perRow == 0 %}
+                <div class="row mb-4">
+            {% endif %}
+
+            <div  class="col">
+                <div class="card">
+                    <div class="card-body bg-dark">
+
+                        <video class="w-100" controls>
+{#                            <source src="{{ asset('upload/showreel/' ~ showreel) }}" type="video/{{ ext }}">#}
+                            This video seems unsupported by your browser
+                        </video>
+                        <a href="{{ path('app_settings_media', {'spot': 'project' ~ (i+1)}) }}"
+                           class="btn btn-primary w-100 mb-2" data-turbo="onClick">
+                            Modifier le projet {{ i + 1 }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {% if (i + 1) % perRow == 0 or (i + 1) == total %}
+                </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </template>
+</turbo-stream>

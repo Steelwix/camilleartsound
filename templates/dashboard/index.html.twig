@@ -36,8 +36,9 @@
                     <h5 class="card-title text-center">WORK</h5>
                     <img src="https://images.pexels.com/photos/5011647/pexels-photo-5011647.jpeg" class="card-img-top" alt="Card Image">
                     <div class="card-body">
-                        <a href="{{ path('app_settings_media', {'spot': 'work'})}}" class="btn btn-secondary disabled" data-turbo="onClick">Modifier le showReel</a>
-                        <a href="#" class="btn btn-secondary disabled" >Modifier les projets</a>
+                        <a href="{{ path('app_settings_media', {'spot': 'showreel'})}}" class="btn btn-primary" data-turbo="onClick">Modifier le showReel</a>
+                        <a href="{{ path('app_settings_projects_media')}}" class="btn btn-primary" data-turbo="onClick">Modifier les projets</a>
+                        <a href="{{ path('app_settings_projects')}}" class="btn btn-primary" data-turbo="onClick">Parametrer l'affichage</a>
                     </div>
                 </div>
             </div>

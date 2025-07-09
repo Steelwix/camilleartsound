@@ -8,7 +8,7 @@
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
-    #[AllowDynamicProperties] class MediaService
+    #[AllowDynamicProperties] class MediaService extends SettingService
     {
         public function __construct(MediaFactory $mediaFactory, EntityManagerInterface $em, #[Autowire('%upload_directory%')] $uploadDirectory)
         {
@@ -52,6 +52,6 @@
                 ->where('m.type = :spot')
                 ->setParameter('spot', $spot);
 
-            return $qb->getQuery()->getSingleScalarResult();
+            return $qb->getQuery()->getOneOrNullResult();
         }
     }

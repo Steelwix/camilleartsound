@@ -2,24 +2,37 @@
 
     namespace App\Twig;
 
+    use AllowDynamicProperties;
+    use App\Entity\Setting;
     use App\Service\MediaService;
+    use App\Service\SettingService;
+    use Doctrine\ORM\EntityManagerInterface;
     use Twig\Extension\AbstractExtension;
     use Twig\Extension\GlobalsInterface;
 
-    class GlobalExtension extends AbstractExtension implements GlobalsInterface
+    #[AllowDynamicProperties] class GlobalExtension extends AbstractExtension implements GlobalsInterface
     {
-        private MediaService $mediaService;
 
-        public function __construct(MediaService $mediaService)
+        public function __construct(MediaService $mediaService,SettingService $settingService, EntityManagerInterface $em)
         {
             $this->mediaService = $mediaService;
+            $this->settingService = $settingService;
+            $this->em = $em;
         }
 
         public function getGlobals(): array
         {
+            $projects = [];
+            for($i=1; $i<=$this->settingService->getProjectDisplay(); $i++){
+                $projects[$i] = $this->mediaService->getMedia('project'.$i);
+            }
             return [
                 'headerMedia' => $this->mediaService->getMedia('header'),
-                'uploadDirectory' => $this->mediaService->uploadDirectory
+                'showreel' => $this->mediaService->getMedia('showreel'),
+                'uploadDirectory' => $this->mediaService->uploadDirectory,
+                'projectDisplay' => $this->settingService->getProjectDisplay(),
+                'projectPerRow' => $this->settingService->getProjectPerRow(),
+                'projects' => $projects
             ];
         }
     }

@@ -5,7 +5,7 @@
         {% include "_partials/_light_nav.html.twig" %}
 
         <div id="home" class="container-fluid p-0" style="position: relative; height: 100vh; overflow: hidden;">
-            {% set ext = headerMedia|split('.')|last|lower %}
+            {% set ext = headerMedia.name|split('.')|last|lower %}
 
             {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
                 <div style="
@@ -19,7 +19,7 @@
             width: 100%; height: 100%; object-fit: cover;
             position: absolute; top: 0; left: 0;
             z-index: -1;">
-                    <source src="{{ asset('upload/header/' ~ headerMedia) }}" type="video/{{ ext }}">
+                    <source src="{{ asset('upload/header/' ~ headerMedia.name) }}" type="video/{{ ext }}">
                     Votre navigateur ne supporte pas la vidéo.
                 </video>
             {% else %}
@@ -48,41 +48,42 @@
                 <div class="col-12 mt-5 mb-5">
                     <h3 class="text-center">ShowReel 2024</h3>
                 </div>
-                <div class="col-12 w-50 mx-auto">
-                    <img class="img-fluid mx-auto rounded"
-                         src="https://wallpapers.com/images/hd/1920-x-1080-hd-1qq8r4pnn8cmcew4.jpg" alt="">
+                <div class="col-12 col-md-6 mx-auto">
+                    <video class="w-100" controls>
+                        <source src="{{ asset('upload/showreel/' ~ showreel.name) }}" type="video/{{ ext }}">
+                        This video seems unsupported by your browser
+                    </video>
                 </div>
                 <div class="col-12 mt-5 mb-5">
                     <h5 class="text-center">Selected Work</h5>
                 </div>
-                <div class="col-12 text-center mb-5">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/q8gJQ_c4eBU?si=mQYoJaSr2igTR1C3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
-                <div class="col-4 mb-4">
-                    <img class="card-img-top" src="https://wallpapers.com/images/hd/1920-x-1080-hd-1qq8r4pnn8cmcew4.jpg"
-                         alt="">
-                </div>
-                <div class="col-4 mb-4">
-                    <img class="card-img-top"
-                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAgCP4ggjblYy6md3itu-vR8l380G0GiIR4w&s"
-                         alt="">
-                </div>
-                <div class="col-4 mb-4">
-                    <img class="card-img-top"
-                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZSf3OywU4xlS9bYZLxRh2SLOoBPwaMDI5gA&s"
-                         alt="">
-                </div>
-                <div class="col-4 mb-4">
-                    <img class="card-img-top" src="https://images7.alphacoders.com/137/1378048.png" alt="">
-                </div>
-                <div class="col-4 mb-4">
-                    <img class="card-img-top" src="https://basicappleguy.com/s/WWDC_Wallpaper_Mac-e6fm.png" alt="">
-                </div>
-                <div class="col-4 mb-4">
-                    <img class="card-img-top"
-                         src="https://www.pixelstalk.net/wp-content/uploads/image12/A-retro-futuristic-space-aesthetic-laptop-wallpaper-with-vibrant-neon-colors-showcasing-a-spaceship-flying-past-a-glowing-planet-and-stars.jpg"
-                         alt="">
-                </div>
+
+
+                {% set total = projectDisplay %}
+                {% set perRow = projectPerRow %}
+
+                {% for i in 1..total %}
+                    {% if (i - 1) % perRow == 0 %}
+                        <div class="row mb-4">
+                    {% endif %}
+
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body bg-dark">
+                                {% if projects[i] is not null %}
+                                    <video class="w-100" controls>
+                                        <source src="{{ asset('upload/project' ~ i ~ '/' ~ projects[i].name) }}" type="video/{{ ext }}">
+                                        This video seems unsupported by your browser
+                                    </video>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if i % perRow == 0 or i == total %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
             </div>
         </div>

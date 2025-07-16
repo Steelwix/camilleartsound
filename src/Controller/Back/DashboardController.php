@@ -4,11 +4,14 @@
 
     use AllowDynamicProperties;
     use App\Entity\Media;
+    use App\Form\BioTextType;
+    use App\Form\ContactsCollectionType;
     use App\Form\MediaType;
     use App\Form\ProjectMediaType;
     use App\Form\ProjectSettingsType;
     use App\Service\MediaService;
     use App\Service\ProjectService;
+    use App\Service\SettingService;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
@@ -18,10 +21,10 @@
 
     #[AllowDynamicProperties] class DashboardController extends AbstractController
     {
-        public function __construct(MediaService $mediaService, ProjectService $projectService)
+        public function __construct(MediaService $mediaService, SettingService $settingService)
         {
             $this->mediaService = $mediaService;
-            $this->projectService = $projectService;
+            $this->settingService = $settingService;
         }
 
         #[Route('/dashboard', name: 'app_dashboard')]
@@ -59,11 +62,15 @@
     #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/projects', name: 'app_settings_projects')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
     public function settingsProjects(Request $request){
-        $form = $this->createForm(ProjectSettingsType::class);
+        $projectDisplay = $this->settingService->getProjectDisplay();
+        $projectPerRow = $this->settingService->getProjectPerRow();
+        $form = $this->createForm(ProjectSettingsType::class, [
+            'projectDisplay' => $projectDisplay,
+            'projectPerRow' => $projectPerRow]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->projectService->manageProjectSettings($form);
+            $this->settingService->manageProjectSettings($form);
             return $this->redirectToRoute('app_dashboard');
         }
         $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
@@ -75,10 +82,45 @@
         #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/projects/media', name: 'app_settings_projects_media')]
         #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function settingsProjectsMedia(Request $request){
-            $projectDisplay = 6; //TODO: get from DB
-            $projectPerRow = 3;
+            $projectDisplay = $this->settingService->getProjectDisplay();
+            $projectPerRow = $this->settingService->getProjectPerRow();
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             return $this->render('dashboard/settings/projectMedia.html.twig', ['projectDisplay' => $projectDisplay, 'projectPerRow' => $projectPerRow
             ]);
         }
+
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/text', name: 'app_settings_bio_text')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsBioText(Request $request){
+            $bio = $this->settingService->getBioText();
+            $form = $this->createForm(BioTextType::class, ["text" => $bio]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                    $this->settingService->manageBioText($form->get('text')->getData());
+                return $this->redirectToRoute('app_dashboard');
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/bio/text.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
+
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/contacts', name: 'app_settings_bio_contacts')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsContacts(Request $request){
+            $form = $this->createForm(ContactsCollectionType::class);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                dd($form->get('text')->getData());
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/bio/contacts.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
+
     }

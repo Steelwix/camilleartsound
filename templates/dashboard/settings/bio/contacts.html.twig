@@ -1,0 +1,46 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div class="col-12 mt-5">
+            <h3 style="color:white">Modify contacts</h3>
+
+            {{ form_start(form, {
+                'action': path('app_settings_bio_contacts'),
+                'attr': {'data-turbo': 'true'}
+            }) }}
+
+            <ul id="contact-list"
+                data-index="{{ form.contacts|length > 0 ? form.contacts|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_widget(form.contacts.vars.prototype)|e('html_attr') }}"
+            >
+                {% for contact in form.contacts %}
+                    <li>{{ form_row(contact.text) }}</li>
+                    <li>{{ form_row(contact.position) }}</li>
+                {% endfor %}
+            </ul>
+
+            <button type="button" id="add-contact" class="btn btn-secondary mt-2">+ Ajouter un contact</button>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+
+            {{ form_end(form) }}
+
+            <script>
+                    const contactList = document.getElementById('contact-list');
+                    const addBtn = document.getElementById('add-contact');
+                    let index = parseInt(contactList.dataset.index, 10);
+
+                    addBtn.addEventListener('click', () => {
+                        const prototype = contactList.dataset.prototype;
+                        const newForm = prototype.replace(/__name__/g, index);
+                        const li = document.createElement('li');
+                        li.innerHTML = newForm;
+                        contactList.appendChild(li);
+                        index++;
+                        contactList.dataset.index = index;
+                    });
+            </script>
+        </div>
+    </template>
+</turbo-stream>

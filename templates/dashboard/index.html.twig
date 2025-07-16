@@ -48,9 +48,11 @@
                     <h5 class="card-title text-center">BIO</h5>
                     <img src="https://images.pexels.com/photos/5011647/pexels-photo-5011647.jpeg" class="card-img-top" alt="Card Image">
                     <div class="card-body">
-                        <a href="{{ path('app_settings_media', {'spot': 'bio'}) }}" class="btn btn-secondary disabled" data-turbo="onClick">Modifier la photo</a>
-                        <a href="#" class="btn btn-secondary disabled">Modifier la bio</a>
-                        <a href="#" class="btn btn-secondary disabled">Modifier les contacts</a>
+                        <a href="{{ path('app_settings_media', {'spot': 'bio'}) }}" class="btn btn-primary" data-turbo="onClick">Modifier la photo</a>
+                        <a href="{{ path('app_settings_bio_text') }}" class="btn btn-primary">Modifier la bio</a>
+                        <a href="{{ path('app_settings_bio_contacts') }}" class="btn btn-primary">Modifier les contacts</a>
+                        <a href="#" class="btn btn-secondary disabled">Modifier le mail</a>
+                        <a href="#" class="btn btn-secondary disabled">Modifier les réseaux sociaux</a>
                     </div>
                 </div>
             </div>

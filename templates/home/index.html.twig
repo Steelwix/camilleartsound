@@ -93,16 +93,13 @@
                     <div class="row">
                         <div class="col-6 mx-auto w-25">
                             <img class="img-fluid mx-auto rounded-circle"
-                                 src="https://preview.redd.it/new-profile-pictures-for-yall-v0-ul96as2xte3c1.jpg?width=640&crop=smart&auto=webp&s=43f47ff0ad6fcb44abddc1490c496bfbcf0a0458"
+                                 src="{{ asset('upload/bio/' ~ bioImage.name) }}"
                                  alt="Photo de profil">
                         </div>
+
                         <div class="col-md-6 my-auto">
                             <h5>Camille Saby</h5>
-                            <p>As a passionate sound designer and digital art enthusiast, I aim to work in video game
-                                industry. Sound inspires me as a living material to shape and transform, with sound
-                                synthesis offering a playground for creating immersive atmospheres and innovative
-                                soundscapes.
-                            </p>
+                            <p>{{ bioText|raw }}</p>
                         </div>
                     </div>
                 </div>

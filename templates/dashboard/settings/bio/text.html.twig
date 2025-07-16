@@ -1,0 +1,18 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div class="col-12 mt-5">
+            <h3 style="color:white">Modify the bio</h3>
+
+            {{ form_start(form, {
+                'action': path('app_settings_bio_text'),
+                'attr': {'data-turbo': 'true'}
+            }) }}
+
+            {{ form_widget(form.text) }}
+{#                input sert a bait le form symfony pour lui injecter les datas#}
+            <trix-editor input="bio_text_text"></trix-editor>
+
+            {{ form_end(form) }}
+        </div>
+    </template>
+</turbo-stream>

@@ -61,3 +61,15 @@ p {
 .breathing {
     animation: breathe 5s infinite, spawn 3s normal;
 }
+
+trix-editor {
+    background-color: #ffffff !important; /* ton fond */
+    color: #000000 !important;             /* texte visible */
+    border: 1px solid #444;
+    padding: 1rem;
+    min-height: 200px;
+}
+
+.trix-button {
+    background-color: #ffffff !important; /* ton fond */
+}

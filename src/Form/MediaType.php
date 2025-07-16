@@ -18,10 +18,17 @@ class MediaType extends AbstractType
             ->add('media', FileType::class, [
                 'label' => 'Fichier',
                 'constraints' => [
-                                   new File([
-                                                'maxSize' => '100M',
-                                                'mimeTypes' => ['video/mp4', 'video/quicktime'],
-                                            ]),
+                    new File([
+                                 'maxSize' => '100M',
+                                 'mimeTypes' => [
+                                     'video/mp4',
+                                     'video/quicktime',
+                                     'image/jpeg',
+                                     'image/png',
+                                     'image/gif',
+                                 ],
+                                 'mimeTypesMessage' => 'Veuillez uploader une vidéo mp4/quicktime ou une image (jpeg, png, gif).',
+                             ]),
                 ],
             ])
 

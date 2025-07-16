@@ -32,7 +32,9 @@
                 'uploadDirectory' => $this->mediaService->uploadDirectory,
                 'projectDisplay' => $this->settingService->getProjectDisplay(),
                 'projectPerRow' => $this->settingService->getProjectPerRow(),
-                'projects' => $projects
+                'projects' => $projects,
+                'bioText' => $this->settingService->getBioText(),
+                'bioImage' => $this->mediaService->getMedia('bio'),
             ];
         }
     }

@@ -1,3 +1,11 @@
+:root {
+    --color-primary: #ff252b;
+    /*--color-primary: #fffc00;*/
+    --color-secondary: #00fff7;
+    --color-tertiary: #fffc00;
+    --color-pink: #e600ff;
+}
+
 h1,h2,h3,h4,h5{
     font-family: "Teko", sans-serif;
 }
@@ -14,8 +22,8 @@ p {
 }
 
 .btn-outline-light:hover {
-    background-color: #FF5A5F !important; /* Couleur de fond lors du survol */
-    border-color: #7B6D8D !important; /* Couleur de la bordure lors du survol */
+    background-color: var(--color-primary) !important; /* Couleur de fond lors du survol */
+    border-color: transparent !important; /* Couleur de la bordure lors du survol */
 }
 
 
@@ -31,20 +39,20 @@ p {
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
 }
 
-.bg-pitch-black{
-
-    background-color: #011627 !important;
+.bg-pitch-black {
+    background: linear-gradient(135deg, #000000 0%, #020c0a 100%) !important;
+    box-shadow: 0 0 10px var(--color-primary) inset;
 }
 
 @keyframes breathe {
     0% {
-        text-shadow: 0 0 0px rgb(255, 90, 95), 0 0 0px rgb(255, 90, 95);
+        text-shadow: 0 0 0px var(--color-primary), 0 0 0px var(--color-primary);
     }
     50% {
-        text-shadow: 0 0 3px rgb(255, 90, 95), 0 0 3px rgb(255, 90, 95);
+        text-shadow: 0 0 3px var(--color-primary), 0 0 3px var(--color-primary);
     }
     100% {
-        text-shadow: 0 0 0px rgb(255, 90, 95), 0 0 0px rgb(255, 90, 95);
+        text-shadow: 0 0 0px var(--color-primary), 0 0 0px var(--color-primary);
     }
 }
 
@@ -63,13 +71,186 @@ p {
 }
 
 trix-editor {
-    background-color: #ffffff !important; /* ton fond */
-    color: #000000 !important;             /* texte visible */
+    background-color: #ffffff !important;
+    color: #000000 !important;
     border: 1px solid #444;
     padding: 1rem;
     min-height: 200px;
 }
 
 .trix-button {
-    background-color: #ffffff !important; /* ton fond */
+    background-color: #ffffff !important;
+}
+
+.glitch-btn {
+    position: relative;
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    overflow: hidden;
+    border: 2px solid #ff0000; /* Bordure visible tout le temps */
+    padding: 12px 32px;
+    background: red;
+    transition: all 0.3s ease;
+}
+
+.glitch-btn:after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    background: transparent;
+    clip-path: var(--slice-0);
+    text-shadow: -3px -3px 0px #ff252b, 3px 3px 0px #00e6f6;
+}
+
+.glitch-btn:hover {
+    color: #00fff7;
+    border-color: #00fff7; /* Bordure confirmée */
+    box-shadow: 0 0 15px #00fff7; /* Glow autour mais bordure visible */
+}
+
+.glitch-btn:hover:after {
+    animation: glitch 1s steps(2, end) infinite;
+}
+
+/* Variables pour slices */
+.glitch-btn:after {
+    --slice-0: inset(50% 50% 50% 50%);
+    --slice-1: inset(100% -60px 0 0);
+    --slice-2: inset(50% -6px 30% 0);
+    --slice-3: inset(10% -6px 85% 0);
+    --slice-4: inset(40% -6px 43% 0);
+    --slice-5: inset(80% -6px 5% 0);
+}
+
+/* Animation glitch */
+@keyframes glitch {
+    0% {
+        clip-path: var(--slice-1);
+        transform: translate(-20px, -10px);
+    }
+    10% {
+        clip-path: var(--slice-3);
+        transform: translate(10px, 10px);
+    }
+    20% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 10px);
+    }
+    30% {
+        clip-path: var(--slice-3);
+        transform: translate(0px, 5px);
+    }
+    40% {
+        clip-path: var(--slice-2);
+        transform: translate(-5px, 0px);
+    }
+    50% {
+        clip-path: var(--slice-3);
+        transform: translate(5px, 0px);
+    }
+    60% {
+        clip-path: var(--slice-4);
+        transform: translate(5px, 10px);
+    }
+    70% {
+        clip-path: var(--slice-2);
+        transform: translate(-10px, 10px);
+    }
+    80% {
+        clip-path: var(--slice-5);
+        transform: translate(20px, -10px);
+    }
+    90% {
+        clip-path: var(--slice-1);
+        transform: translate(-10px, 0px);
+    }
+    100% {
+        clip-path: var(--slice-1);
+        transform: translate(0);
+    }
+
+
+}
+.empty-10{
+    height: 10vh;
+}
+
+.section-divider {
+    width: 50%;
+    margin: 5vh auto;
+    height: 2px;
+    background-color: var(--color-secondary);
+    box-shadow: 0 0 10px var(--color-secondary), 0 0 20px var(--color-secondary); /* Glow cyberpunk */
+}
+
+.hero-section {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Aligne en haut mais avec un padding */
+    text-align: center;
+    padding-top: 15vh; /* Décalage depuis le haut */
+}
+
+/* Responsive pour téléphone */
+@media (max-width: 768px) {
+    .hero-section {
+        justify-content: flex-start; /* Remonte le contenu */
+        padding-top: 20vh; /* Ajoute un espace en haut */
+        height: auto; /* Permet de scroller si le contenu dépasse */
+    }
+}
+
+.bio-section {
+    position: relative;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-pink));
+    background-size: 300% 300%;
+    animation: moveGradient 60s ease infinite;
+    color: #fff;
+    overflow: hidden;
+    padding: 50px 20px;
+    z-index: 1;
+}
+
+/* Animation du dégradé */
+@keyframes moveGradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+a {
+    color: var(--color-primary) !important;
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: var(--color-secondary) !important;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* espace entre les icônes */
+    margin-top: 20px;
+}
+
+.social-links a {
+    color: var(--color-secondary); /* couleur néon par défaut */
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+.social-links a:hover {
+    color: var(--color-primary);
+    text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
 }

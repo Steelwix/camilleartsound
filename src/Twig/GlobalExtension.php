@@ -35,6 +35,9 @@
                 'projects' => $projects,
                 'bioText' => $this->settingService->getBioText(),
                 'bioImage' => $this->mediaService->getMedia('bio'),
+                'bioContacts' => $this->settingService->getBioContacts(),
+                'bioMail' => $this->settingService->getBioMail(),
+                'bioSocials' => $this->settingService->getBioSocials(),
             ];
         }
     }

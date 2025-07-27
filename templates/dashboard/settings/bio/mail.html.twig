@@ -1,0 +1,16 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div class="col-12 mt-5">
+            <h3 style="color:white">Modify the mail</h3>
+
+            {{ form_start(form, {
+                'action': path('app_settings_bio_mail'),
+                'attr': {'data-turbo': 'true'}
+            }) }}
+
+            {{ form_widget(form.mail) }}
+
+            {{ form_end(form) }}
+        </div>
+    </template>
+</turbo-stream>

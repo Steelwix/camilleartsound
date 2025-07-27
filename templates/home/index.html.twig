@@ -2,9 +2,10 @@
 
 {% block body %}
     <div id="homepage">
+    <div id="header">
         {% include "_partials/_light_nav.html.twig" %}
 
-        <div id="home" class="container-fluid p-0" style="position: relative; height: 100vh; overflow: hidden;">
+        <div id="home" class="container-fluid hero-section" style="position: relative; height: 100vh; overflow: hidden;">
             {% set ext = headerMedia.name|split('.')|last|lower %}
 
             {% if ext in ['jpg', 'jpeg', 'png', 'gif'] %}
@@ -32,21 +33,20 @@
                     <h1 style="" class="header-title text-white col-12 breathing">Camille SABY</h1>
                     <h4 class="header-subtitle text-white col-12 breathing">▲ Sound Designer // Technical SD ▼</h4>
 
-                    <div class="col-12  breathing">
-                        <a class="btn btn-outline-light text-white mx-5">Show reel</a>
-                        <a class="btn btn-outline-light text-white mx-5">Technical demo</a>
+                    <div class="col-12 breathing">
+                        <a href="#work" class="btn btn-outline-dark glitch-btn text-white mx-5" data-text="Show reel">Show reel</a>
+                        <a href="#work" class="btn btn-outline-dark glitch-btn text-white mx-5" data-text="Technical demo">Technical demo</a>
+                    </div>
 
-                    </div>
-                    <div class="col-12 col-md-6 breathing">
-                    </div>
                 </div>
 
             </div>
         </div>
+        <div class="section-divider"></div>
         <div style="min-height: 100vh" id="work" class="container">
             <div class="row">
-                <div class="col-12 mt-5 mb-5">
-                    <h3 class="text-center">ShowReel 2024</h3>
+                <div class="col-12 mb-5">
+                    <h2 class="text-center breathing">ShowReel 2024</h2>
                 </div>
                 <div class="col-12 col-md-6 mx-auto">
                     <video class="w-100" controls>
@@ -55,7 +55,7 @@
                     </video>
                 </div>
                 <div class="col-12 mt-5 mb-5">
-                    <h5 class="text-center">Selected Work</h5>
+                    <h3 class="text-center breathing">Selected Work</h3>
                 </div>
 
 
@@ -87,14 +87,17 @@
 
             </div>
         </div>
-        <div id="about" class="container-fluid p-4 text-dark" style="background-color: #e3d8f1;">
+        <div class="section-divider"></div>
+
+        <div id="about" class="container-fluid p-4 text-dark  bio-section" style="">
             <div class="row justify-content-center">
-                <div class="col-10">
+                <div class="col-12">
                     <div class="row">
-                        <div class="col-6 mx-auto w-25">
+                        <div class="col-6 mx-auto" style="max-width: 350px;">
                             <img class="img-fluid mx-auto rounded-circle"
                                  src="{{ asset('upload/bio/' ~ bioImage.name) }}"
-                                 alt="Photo de profil">
+                                 alt="Photo de profil"
+                                 style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
                         </div>
 
                         <div class="col-md-6 my-auto">
@@ -105,21 +108,41 @@
                 </div>
             </div>
         </div>
+
+        <div class="section-divider"></div>
+
         <div style="margin-bottom: 35vh" class="container">
             <div class="row">
                 <div class="col-12 mt-5 mb-5 text-center">
-                    <h3>CONTACT ME</h3>
-                    <p>Camille SABY</p>
-                    <p>Sound Designer</p>
-                    <p>France, LYON</p>
-                    <a style="color:#ff5a5f ;text-decoration: none" href="mailto:cs.sabycamille@gmail.com">cs.sabycamille@gmail.com</a>
+                    <h3 class="breathing">CONTACT ME</h3>
+                    {% for contact in bioContacts %}
+                        <p>{{ contact.text }}</p>
+                     {% endfor %}
+                    <a class="mailto" style="color:#ff252b ;text-decoration: none" href="mailto:{{ bioMail }}">{{ bioMail }}</a>
                 </div>
-                <div class="col-12 text-center">
-                    <i class=" bi bi-linkedin fs-2 me-3"></i>
-                    <i class=" bi bi-linkedin fs-2"></i>
+                <div class="col-12 text-center social-links">
+                    {% for social in bioSocials %}
+                        {% if social.network %}
+                        <a href="{{ social.link }}"><i class=" bi bi-{{ social.network}} fs-2"></i></a>
+                        {% else %}
+                        <a href="{{ social.link }}"><i class=" bi bi-globe fs-2"></i></a>
+                        {% endif %}
+                    {% endfor %}
+{#                    <i class=" bi bi-github fs-2"></i>#}
+{#                    <i class=" bi bi-linkedin fs-2"></i>#}
+{#                    <i class=" bi bi-instagram fs-2"></i>#}
+{#                    <i class=" bi bi-facebook fs-2"></i>#}
+{#                    <i class=" bi bi-twitter fs-2"></i>#}
+{#                    <i class=" bi bi-whatsapp fs-2"></i>#}
+{#                    <i class=" bi bi-discord fs-2"></i>#}
+{#                    <i class=" bi bi-youtube fs-2"></i>#}
+{#                    <i class=" bi bi-twitch fs-2"></i>#}
+{#                    <i class=" bi bi-pinterest fs-2"></i>#}
+{#                    <i class=" bi bi-spotify fs-2"></i>#}
+{#                    <i class=" bi bi-snapchat fs-2"></i>#}
                 </div>
             </div>
         </div>
-
+<div class="empty-10"></div>
     </div>
 {% endblock %}

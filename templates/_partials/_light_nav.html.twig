@@ -16,20 +16,76 @@
         font-style: normal;
     }
     .navbar a:hover {
-        color: #ff5a5f !important;
-        text-shadow: 0px 0px 5px #7b6d8d
+        color: #ff252b !important;
+        text-shadow: 0px 0px 5px #000000
         /*-1px -1px 0 #0E9594,*/
         /*1px -1px 0 #0E9594,*/
         /*-1px 1px 0 #0E9594;*/
     }
 
+    .glitch-link {
+        position: relative;
+        color: #fff;
+        font-size: 18px;
+        text-decoration: none;
+        letter-spacing: 2px;
+        display: inline-block;
+        overflow: hidden;
+    }
+
+    .glitch-link::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #fff;
+        text-shadow: -3px -3px 0px #ff252b, 3px 3px 0px #00e6f6;
+        clip-path: inset(0 0 0 0);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .glitch-link:hover::after {
+        opacity: 1;
+        animation: glitch 0.7s steps(2, end) infinite;
+    }
+
+    /* Animation glitch */
+    @keyframes glitch {
+        0% {
+            clip-path: inset(80% 0 0 0);
+            transform: translate(-2px, -2px);
+        }
+        20% {
+            clip-path: inset(10% 0 85% 0);
+            transform: translate(2px, 2px);
+        }
+        40% {
+            clip-path: inset(50% 0 30% 0);
+            transform: translate(-3px, 1px);
+        }
+        60% {
+            clip-path: inset(40% 0 43% 0);
+            transform: translate(3px, -1px);
+        }
+        80% {
+            clip-path: inset(80% 0 5% 0);
+            transform: translate(-1px, 2px);
+        }
+        100% {
+            clip-path: inset(0 0 0 0);
+            transform: translate(0);
+        }
+    }
+
+
 </style>
 
 <header class="fixed-top d-flex justify-content-center mt-3">
     <nav class="navbar">
-        <a class="nav-link fw-bold" href="#home">HOME</a>
-        <a class="nav-link fw-bold" href="#work">WORK</a>
-        <a href="{{ path('app_home_about') }}" class="nav-link fw-bold" data-turbo="onClick">ABOUT</a>
+        <a class="nav-link fw-bold glitch-link" data-text="HOME" href="#home">HOME</a>
+        <a class="nav-link fw-bold glitch-link" data-text="WORK" href="#work">WORK</a>
+        <a class="nav-link fw-bold glitch-link" data-text="ABOUT" href="{{ path('app_home_about') }}">ABOUT</a>
     </nav>
 </header>
 

@@ -6,29 +6,34 @@
     use App\Entity\Setting;
     use Doctrine\ORM\EntityManagerInterface;
 
+
     #[AllowDynamicProperties] class SettingService
     {
+        const DEFAULT_MAIL = 'cs.sabycamille@gmail.com';
+
         public function __construct(EntityManagerInterface $em)
         {
             $this->em = $em;
         }
 
 
-        public function getProjectDisplay() {
+        public function getProjectDisplay()
+        {
             $projectDisplay = 6;
 
             $settingProjectDisplay = $this->em->getRepository(Setting::class)->findOneBy(['label' => 'projectDisplay']);
-            if($settingProjectDisplay){
+            if ($settingProjectDisplay) {
                 $projectDisplay = $settingProjectDisplay->getValue();
             }
             return $projectDisplay;
         }
 
-        public function getProjectPerRow() {
+        public function getProjectPerRow()
+        {
             $projectPerRow = 3;
 
             $settingProjectPerRow = $this->em->getRepository(Setting::class)->findOneBy(['label' => 'projectPerRow']);
-            if($settingProjectPerRow){
+            if ($settingProjectPerRow) {
                 $projectPerRow = $settingProjectPerRow->getValue();
             }
             return $projectPerRow;
@@ -49,7 +54,6 @@
                 $setting->setValue($formValue);
             }
             $this->em->flush();
-
         }
 
         public function manageBioText($rawHtmlText): void
@@ -68,10 +72,136 @@
             return;
         }
 
-        public function getBioText() {
+        public function getBioText()
+        {
             $text = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'text']);
-            if(!$text) return '';
+            if (!$text) {
+                return '';
+            }
             return $text->getValue();
+        }
+
+        public function manageContacts($formContacts): void
+        {
+            $contacts = [];
+            $savedContactsJson = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'contacts']);
+
+            if ($savedContactsJson) {
+                $savedContacts = json_decode($savedContactsJson->getValue(), true);
+                foreach ($savedContacts as $contact) {
+                    $contacts[$contact['position']]['position'] = $contact['text'];
+                }
+            }
+
+            if (!$savedContactsJson) {
+                $savedContactsJson = new Setting();
+                $savedContactsJson->setLabel('contacts');
+                $savedContactsJson->setType('contacts');
+                $this->em->persist($savedContactsJson);
+            }
+
+
+            foreach ($formContacts as $contact) {
+                $contacts[$contact['position']]['position'] = $contact['position'];
+                $contacts[$contact['position']]['text'] = $contact['text'];
+            }
+
+            $contactsJson = json_encode($contacts);
+            $savedContactsJson->setValue($contactsJson);
+            $this->em->flush();
+        }
+
+        public function manageBioMail($mail)
+        {
+            $bioMail = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'email']);
+            if (!$bioMail) {
+                $bioMail = new Setting();
+                $bioMail->setLabel('email');
+                $bioMail->setType('bio');
+                $this->em->persist($bioMail);
+            }
+            $bioMail->setValue($mail);
+            $this->em->flush();
+        }
+
+        public function getBioContacts()
+        {
+            $contacts = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'contacts']);
+            if (!$contacts) {
+                return [];
+            }
+            $contacts = json_decode($contacts->getValue(), true);
+            usort($contacts, function($a, $b) {
+                return $a['position'] <=> $b['position'];
+            });
+            return $contacts;
+        }
+
+        public function getBioMail()
+        {
+            $mail = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'email']);
+            if (!$mail) {
+                return self::DEFAULT_MAIL;
+            }
+            return $mail->getValue();
+        }
+
+        public function manageSocials($formSocials)
+        {
+            $socials = [];
+            $savedSocialsJson = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'socials']);
+
+            if ($savedSocialsJson) {
+                $savedSocials = json_decode($savedSocialsJson->getValue(), true);
+                foreach ($savedSocials as $social) {
+                    $socials[$social['position']]['position'] = $social['position'];
+                    $socials[$social['position']]['link'] = $social['link'];
+                    $socials[$social['position']]['network'] = $social['network'];
+                    $socials[$social['position']]['customNetwork'] = $social['customNetwork'];
+                }
+            }
+
+            if (!$savedSocialsJson) {
+                $savedSocialsJson = new Setting();
+                $savedSocialsJson->setLabel('socials');
+                $savedSocialsJson->setType('bio');
+                $this->em->persist($savedSocialsJson);
+            }
+
+
+            foreach ($formSocials as $social) {
+                $socials[$social['position']]['position'] = $social['position'];
+                $socials[$social['position']]['link'] = $social['link'];
+                if($social['network'])
+                {
+                    $socials[$social['position']]['network'] = $social['network'];
+                }
+                if(!$social['network']){
+                    $socials[$social['position']]['network'] = null;
+                    $socials[$social['position']]['customNetwork'] = $social['customNetwork'];
+                }
+                if(!$social['network'] && !$social['customNetwork']){
+                    unset($socials[$social['position']]);
+                    continue;
+                }
+            }
+
+            $socialsJson = json_encode($socials);
+            $savedSocialsJson->setValue($socialsJson);
+            $this->em->flush();
+        }
+
+        public function getBioSocials()
+        {
+            $socials = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'socials']);
+            if (!$socials) {
+                return [];
+            }
+            $socials = json_decode($socials->getValue(), true);
+            usort($socials, function($a, $b) {
+                return $a['position'] <=> $b['position'];
+            });
+            return $socials;
         }
 
     }

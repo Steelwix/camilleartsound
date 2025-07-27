@@ -3,14 +3,13 @@
     namespace App\Controller\Back;
 
     use AllowDynamicProperties;
-    use App\Entity\Media;
+    use App\Form\BioMailType;
     use App\Form\BioTextType;
     use App\Form\ContactsCollectionType;
     use App\Form\MediaType;
-    use App\Form\ProjectMediaType;
     use App\Form\ProjectSettingsType;
+    use App\Form\SocialsCollectionType;
     use App\Service\MediaService;
-    use App\Service\ProjectService;
     use App\Service\SettingService;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
@@ -114,7 +113,8 @@
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                dd($form->get('text')->getData());
+                $this->settingService->manageContacts($form->get('contacts')->getData());
+                return $this->redirectToRoute('app_dashboard');
 
             }
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
@@ -123,4 +123,39 @@
             ]);
         }
 
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/mail', name: 'app_settings_bio_mail')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsBioMail(Request $request){
+            $bio = $this->settingService->getBioText();
+            $form = $this->createForm(BioMailType::class);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->settingService->manageBioMail($form->get('mail')->getData());
+                return $this->redirectToRoute('app_dashboard');
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/bio/mail.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
+
+
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/socials', name: 'app_settings_bio_socials')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsSocials(Request $request){
+            $form = $this->createForm(SocialsCollectionType::class);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->settingService->manageSocials($form->get('socials')->getData());
+                return $this->redirectToRoute('app_dashboard');
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/bio/socials.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
     }

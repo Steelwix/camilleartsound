@@ -41,7 +41,7 @@ p {
 
 .bg-pitch-black {
     background: linear-gradient(135deg, #000000 0%, #020c0a 100%) !important;
-    box-shadow: 0 0 10px var(--color-primary) inset;
+    /*box-shadow: 0 0 10px var(--color-primary) inset;*/
 }
 
 @keyframes breathe {

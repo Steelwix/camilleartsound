@@ -41,7 +41,7 @@ p {
 
 .bg-pitch-black {
     background: linear-gradient(135deg, #000000 0%, #020c0a 100%) !important;
-    box-shadow: 0 0 10px var(--color-primary) inset;
+    /*box-shadow: 0 0 10px var(--color-primary) inset;*/
 }
 
 @keyframes breathe {
@@ -93,7 +93,7 @@ trix-editor {
     overflow: hidden;
     border: 2px solid #ff0000; /* Bordure visible tout le temps */
     padding: 12px 32px;
-    background: red;
+    background-color: rgba(66, 61, 61, 0.71) !important;
     transition: all 0.3s ease;
 }
 

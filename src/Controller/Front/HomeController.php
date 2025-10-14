@@ -24,4 +24,14 @@ final class HomeController extends AbstractController
         return $this->render('home/about.html.twig');
 
     }
+
+    #[Route('/home/venture', name: 'app_home_venture')]
+    public function homeProject(Request $request): Response
+    {
+        $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+        return $this->render('home/venture.html.twig', ['editMode' => false]);
+
+    }
+
+
 }

@@ -38,6 +38,7 @@
                 'bioContacts' => $this->settingService->getBioContacts(),
                 'bioMail' => $this->settingService->getBioMail(),
                 'bioSocials' => $this->settingService->getBioSocials(),
+                'ventures' => $this->settingService->getVentures(),
             ];
         }
     }

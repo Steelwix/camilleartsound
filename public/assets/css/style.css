@@ -229,12 +229,12 @@ trix-editor {
     100% { background-position: 0% 50%; }
 }
 
-a {
+.nav-link {
     color: var(--color-primary) !important;
     text-decoration: none !important;
 }
 
-a:hover {
+a:hover .nav-link {
     color: var(--color-secondary) !important;
 }
 

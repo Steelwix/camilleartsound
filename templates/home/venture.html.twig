@@ -1,0 +1,86 @@
+<turbo-stream action="replace" target="homepage">
+    <template>
+
+        <div id="homepage" class="container" data-controller="page-editor">
+            <style>
+                .btn-edit {
+                {% if editMode == false %} display: none;
+                {% endif %}
+                }
+
+                .btn-admin {
+                {% if not app.user %} display: none;
+                {% endif %}
+                }
+            </style>
+            <div class="row">
+                <div class="col-12 d-flex justify-content-center">
+                    <a href="{{ path('app_home') }}" class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5"
+                       data-text="Technical demo">Back</a>
+
+                    {% if editMode == false %}
+                        <a href="{{ path('app_venture_page_edit') }}"
+                           class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5 btn-admin"
+                           data-text="Technical demo">Edit</a>
+                    {% endif %}
+
+                    <a href="{{ path('app_home_venture') }}"
+                       class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5 btn-admin btn-edit"
+                       data-text="Technical demo">Confirm</a>
+
+
+                </div>
+            </div>
+            <div id="ventures" class="row">
+                {% set total = ventures|length %}
+                {% set perRow = projectPerRow %}
+                {% set i = 0 %}
+                <div id="ventures" class="row row-cols-2 row-cols-md-{{ projectPerRow }} g-4">
+                    {% for venture in ventures %}
+                        {% set ext = venture.media.name|split('.')|last|lower %}
+                        <div class="col">
+                            <div class="card h-100 position-relative">
+                                <a href="{{ venture.link }}" class="stretched-link"></a>
+
+                                <div class="card-body bg-dark text-center">
+                                    <img src="{{ asset('upload/venture' ~ venture.id ~ '/' ~ venture.media.name) }}"
+                                         alt="{{ venture.label }}"
+                                         class="img-fluid rounded"
+                                         style="max-height: 200px; object-fit: cover;">
+
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <p class="m-0">{{ venture.label }}</p>
+
+                                        {% if editMode %}
+                                            <a href="{{ path('app_home_venture_edit_edit', {'id': venture.id}) }}" class="btn btn-sm btn-outline-light btn-edit-venture position-relative"
+                                               style="z-index: 2;">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="{{ path('app_home_venture_edit_delete', {'id': venture.id}) }}"
+                                               class="btn btn-sm btn-outline-danger position-relative btn-delete-venture"
+                                               style="z-index: 2;">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                </div>
+
+
+
+            </div>
+
+            <div class="row">
+                <a href="{{ path('app_home_venture_edit_add') }}"
+                   class="btn btn-outline-dark glitch-btn text-white mx-2 btn-edit btn-admin mt-5"
+                   data-text="Technical demo">Add</a>
+            </div>
+        </div>
+
+
+    </template>
+</turbo-stream>

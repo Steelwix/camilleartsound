@@ -33,7 +33,7 @@
                 'type' => $spot
             ]);
             $this->em->persist($media);
-            $this->em->flush();
+            return $media;
         }
 
         public function globalRemoveSpotMedia($spot) :int {

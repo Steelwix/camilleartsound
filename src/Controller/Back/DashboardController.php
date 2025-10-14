@@ -11,6 +11,7 @@
     use App\Form\SocialsCollectionType;
     use App\Service\MediaService;
     use App\Service\SettingService;
+    use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
@@ -20,10 +21,12 @@
 
     #[AllowDynamicProperties] class DashboardController extends AbstractController
     {
-        public function __construct(MediaService $mediaService, SettingService $settingService)
+
+        public function __construct(MediaService $mediaService, SettingService $settingService, EntityManagerInterface $em)
         {
             $this->mediaService = $mediaService;
             $this->settingService = $settingService;
+            $this->em = $em;
         }
 
         #[Route('/dashboard', name: 'app_dashboard')]
@@ -50,6 +53,7 @@
 //            );
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->mediaService->createMedia($form->get('media')->getData(), $spot);
+                $this->em->flush();
                 return $this->redirectToRoute('app_dashboard');
             }
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);

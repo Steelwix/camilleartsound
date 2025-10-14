@@ -4,6 +4,7 @@
 
     use AllowDynamicProperties;
     use App\Entity\Setting;
+    use App\Entity\Venture;
     use Doctrine\ORM\EntityManagerInterface;
 
 
@@ -202,6 +203,19 @@
                 return $a['position'] <=> $b['position'];
             });
             return $socials;
+        }
+
+        public function getVentures()
+        {
+            $ventures = $this->em->getRepository(Venture::class)->findAll();
+            if(!$ventures){
+                return [];
+            }
+            $array = [];
+            foreach ($ventures as $venture) {
+                $array[$venture->getId()] = $venture;
+            }
+            return $array;
         }
 
     }

@@ -1,0 +1,34 @@
+<turbo-stream action="replace" target="homepage">
+    <template>
+        <div id="homepage">
+        <p>Add a venture</p>
+        {{ form_start(ventureForm, {
+            'action': path('app_home_venture_edit_create'),
+            'attr': {
+                'enctype': 'multipart/form-data',
+                'data-turbo': 'true'
+            }
+        }) }}
+        <div class="mb-3">
+            {{ form_widget(ventureForm.label, { 'attr': { 'placeholder': 'Label (optionnel)', 'class': 'form-control' } }) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(ventureForm.media) }}
+            {{ form_widget(ventureForm.media, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(ventureForm.media) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(ventureForm.link) }}
+            {{ form_widget(ventureForm.link, { 'attr': { 'placeholder': 'Lien...', 'class': 'form-control' } }) }}
+            {{ form_errors(ventureForm.link) }}
+        </div>
+
+        <div class="text-end">
+            {{ form_widget(ventureForm.save, { 'attr': { 'class': 'btn btn-primary' } }) }}
+        </div>
+        {{ form_end(ventureForm) }}
+        </div>
+    </template>
+</turbo-stream>

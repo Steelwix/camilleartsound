@@ -13,6 +13,7 @@
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
+    use Symfony\Component\Security\Http\Attribute\IsGranted;
     use Symfony\UX\Turbo\TurboBundle;
 
     #[AllowDynamicProperties] class VentureController extends AbstractController
@@ -25,6 +26,7 @@
             $this->ventureService = $ventureService;
         }
         #[Route('/home/venture/edit', name: 'app_venture_page_edit')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function venturePageEdit(Request $request): Response
         {
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
@@ -33,6 +35,7 @@
         }
 
         #[Route('/home/venture/edit/add', name: 'app_home_venture_edit_add')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function ventureAdd(Request $request): Response
         {
             $ventureForm = $this->createForm(VentureType::class);
@@ -42,6 +45,7 @@
         }
 
         #[Route('/home/venture/edit/create', name: 'app_home_venture_edit_create')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function ventureCreate(Request $request): Response
         {
             $form = $request->request->all()['venture'];
@@ -53,6 +57,7 @@
         }
 
         #[Route('/home/venture/edit/edit', name: 'app_home_venture_edit_edit')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function ventureEdit(Request $request): Response
         {
 
@@ -75,6 +80,7 @@
         }
 
         #[Route('/home/venture/edit/delete', name: 'app_home_venture_edit_delete')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function ventureDelete(Request $request): Response
         {
             $id = $request->query->all()['id'];

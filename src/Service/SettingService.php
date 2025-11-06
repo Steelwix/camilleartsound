@@ -207,7 +207,7 @@
 
         public function getVentures()
         {
-            $ventures = $this->em->getRepository(Venture::class)->findBy([], ['id' => 'DESC']);
+            $ventures = $this->em->getRepository(Venture::class)->findBy([], ['spot' => 'ASC']);
 
             if(!$ventures){
                 return [];

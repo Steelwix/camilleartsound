@@ -23,6 +23,9 @@ class Venture
     #[ORM\JoinColumn(nullable: true, onDelete: "SET NULL")]
     private ?Media $media = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $spot = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +63,18 @@ class Venture
     public function setMedia(?Media $media): static
     {
         $this->media = $media;
+
+        return $this;
+    }
+
+    public function getSpot(): ?int
+    {
+        return $this->spot;
+    }
+
+    public function setSpot(?int $spot): static
+    {
+        $this->spot = $spot;
 
         return $this;
     }

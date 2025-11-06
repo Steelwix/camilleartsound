@@ -1,6 +1,5 @@
 <turbo-stream action="replace" target="homepage">
     <template>
-
         <div id="homepage" class="container" data-controller="page-editor">
             <style>
                 .btn-edit {
@@ -12,7 +11,36 @@
                 {% if not app.user %} display: none;
                 {% endif %}
                 }
+
+                #ventures.dragging-mode {
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .venture-item.dragging {
+                    opacity: 0.5;
+                }
+
+                #ventures.edit-mode {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .venture-item.dragging {
+                    opacity: 0.5;
+                }
+                /* Halo au hover pour tous les modes */
+                .venture-item .card:hover {
+                    box-shadow: 0 0 15px var(--color-secondary); /* cyan */
+                    transition: box-shadow 0.2s ease-in-out;
+                }
+
+                /* Halo plus visible en edit mode */
+                #ventures.edit-mode .venture-item .card:hover {
+                    box-shadow: 0 0 20px var(--color-primary); /* jaune */
+                }
+
             </style>
+
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
                     <a href="{{ path('app_home') }}" class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5"
@@ -27,51 +55,43 @@
                     <a href="{{ path('app_home_venture') }}"
                        class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5 btn-admin btn-edit"
                        data-text="Technical demo">Confirm</a>
-
-
                 </div>
             </div>
-            <div id="ventures" class="row">
-                {% set total = ventures|length %}
-                {% set perRow = projectPerRow %}
-                {% set i = 0 %}
-                <div id="ventures" class="row row-cols-2 row-cols-md-{{ projectPerRow }} g-4">
-                    {% for venture in ventures %}
-                        {% set ext = venture.media.name|split('.')|last|lower %}
-                        <div class="col">
-                            <div class="card h-100 position-relative">
-                                <a href="{{ venture.link }}" target="_blank" class="stretched-link"></a>
 
-                                <div class="card-body bg-dark text-center">
-                                    <img src="{{ asset('upload/venture' ~ venture.id ~ '/' ~ venture.media.name) }}"
-                                         alt="{{ venture.label }}"
-                                         class="img-fluid rounded"
-                                         style="max-height: 200px; object-fit: cover;">
+            {# Container unique pour le drag #}
+            <div id="ventures" class="row row-cols-2 row-cols-md-{{ projectPerRow }} g-4 {% if editMode %}edit-mode{% endif %}">
+                {% for venture in ventures %}
+                    <div class="col venture-item" data-id="{{ venture.id }}">
+                        <div class="card h-100 position-relative">
+                            <a href="{{ venture.link }}" target="_blank" class="stretched-link"></a>
 
-                                    <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <p class="m-0">{{ venture.label }}</p>
-
-                                        {% if editMode %}
-                                            <a href="{{ path('app_home_venture_edit_edit', {'id': venture.id}) }}" class="btn btn-sm btn-outline-light btn-edit-venture position-relative"
-                                               style="z-index: 2;">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="{{ path('app_home_venture_edit_delete', {'id': venture.id}) }}"
-                                               class="btn btn-sm btn-outline-danger position-relative btn-delete-venture"
-                                               style="z-index: 2;">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                        {% endif %}
-                                    </div>
+                            <div class="card-body bg-dark text-center">
+                                <img src="{{ asset('upload/venture' ~ venture.id ~ '/' ~ venture.media.name) }}"
+                                     alt="{{ venture.label }}"
+                                     class="img-fluid rounded"
+                                     style="max-height: 200px; object-fit: cover;">
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <p class="m-0">{{ venture.label }}</p>
+                                    {% if editMode %}
+                                        <a href="{{ path('app_home_venture_edit_edit', {'id': venture.id}) }}"
+                                           class="btn btn-sm btn-outline-light btn-edit-venture position-relative"
+                                           style="z-index: 2;">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <span class="btn btn-sm btn-outline-secondary cursor-grab" style="z-index:2;">
+                                        <i class="bi bi-arrows-move"></i>
+                                        </span>
+                                        <a href="{{ path('app_home_venture_edit_delete', {'id': venture.id}) }}"
+                                           class="btn btn-sm btn-outline-danger position-relative btn-delete-venture"
+                                           style="z-index: 2;">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
-
-                    {% endfor %}
-                </div>
-
-
-
+                    </div>
+                {% endfor %}
             </div>
 
             <div class="row">
@@ -79,8 +99,60 @@
                    class="btn btn-outline-dark glitch-btn text-white mx-2 btn-edit btn-admin mt-5"
                    data-text="Technical demo">Add</a>
             </div>
+            {% if editMode %}
+                <script>
+                    (() => {
+                        const container = document.getElementById("ventures");
+                        if (!container) return;
+
+                        let draggedItem = null;
+
+                        container.querySelectorAll(".venture-item").forEach(item => {
+                            item.draggable = true;
+
+                            item.addEventListener("dragstart", e => {
+                                draggedItem = item;
+                                item.classList.add("dragging");
+                                container.classList.add("dragging-mode");
+                                e.dataTransfer.effectAllowed = "move";
+                            });
+
+                            item.addEventListener("dragend", () => {
+                                draggedItem.classList.remove("dragging");
+                                draggedItem = null;
+                                container.classList.remove("dragging-mode");
+                                container.style.display = ""; // reset display
+                                container.style.flexDirection = "";
+                                saveOrder();
+                            });
+
+                            item.addEventListener("dragover", e => {
+                                e.preventDefault();
+                                const target = e.target.closest(".venture-item");
+                                if (!target || target === draggedItem || target.parentNode !== container) return;
+
+                                const rect = target.getBoundingClientRect();
+                                const next = (e.clientY - rect.top) / rect.height > 0.5;
+                                container.insertBefore(draggedItem, next ? target.nextSibling : target);
+                            });
+                        });
+
+                        function saveOrder() {
+                            const order = Array.from(container.querySelectorAll(".venture-item"))
+                                .map(el => el.dataset.id);
+
+                            fetch("{{ path('app_home_venture_edit_confirm') }}", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "X-Requested-With": "XMLHttpRequest"
+                                },
+                                body: JSON.stringify({order})
+                            });
+                        }
+                    })();
+                </script>
+            {% endif %}
         </div>
-
-
     </template>
 </turbo-stream>

@@ -16,7 +16,7 @@
                         z-index: -1;">
                 </div>
             {% elseif ext in ['mp4', 'webm'] %}
-                <video autoplay loop muted playsinline style="
+                <video preload="metadata" autoplay loop muted playsinline style="
             width: 100%; height: 100%; object-fit: cover;
             position: absolute; top: 0; left: 0;
             z-index: -1;">
@@ -49,7 +49,7 @@
                     <h2 class="text-center breathing">ShowReel 2024</h2>
                 </div>
                 <div class="col-12 col-md-6 mx-auto">
-                    <video class="w-100" controls>
+                    <video class="w-100" controls  preload="metadata">
                         <source src="{{ asset('upload/showreel/' ~ showreel.name) }}" type="video/{{ ext }}">
                         This video seems unsupported by your browser
                     </video>
@@ -71,7 +71,7 @@
                         <div class="card">
                             <div class="card-body bg-dark">
                                 {% if projects[i] is not null %}
-                                    <video class="w-100" controls>
+                                    <video class="w-100" controls preload="metadata">
                                         <source src="{{ asset('upload/project' ~ i ~ '/' ~ projects[i].name) }}" type="video/{{ ext }}">
                                         This video seems unsupported by your browser
                                     </video>

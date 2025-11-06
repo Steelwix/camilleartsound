@@ -10,6 +10,7 @@
     use App\Service\VentureService;
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Routing\Attribute\Route;
@@ -93,5 +94,31 @@
 
 
         }
+
+        #[Route('/home/venture/edit/confirm', name: 'app_home_venture_edit_confirm', methods: ['POST'])]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function ventureConfirm(Request $request, EntityManagerInterface $em): JsonResponse
+        {
+            // Récupère les données JSON envoyées par fetch
+            $data = json_decode($request->getContent(), true);
+
+            if (!isset($data['order']) || !is_array($data['order'])) {
+                return new JsonResponse(['status' => 'error', 'message' => 'Order missing'], 400);
+            }
+
+            $order = $data['order'];
+
+            foreach ($order as $spot => $ventureId) {
+                $venture = $this->em->getRepository(Venture::class)->find($ventureId);
+                if ($venture) {
+                    $venture->setSpot($spot); // met à jour le champ spot selon la position dans le tableau
+                }
+            }
+
+            $em->flush();
+
+            return new JsonResponse(['status' => 'success']);
+        }
+
         
     }

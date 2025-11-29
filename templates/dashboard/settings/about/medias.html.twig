@@ -1,0 +1,25 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div class="col-12 mt-5">
+            <h3 style="color:white">Modify about's medias</h3>
+
+            {{ form_start(form, {
+                'action': path('app_settings_about_medias'),
+                'attr': {'data-turbo': 'true'}
+            }) }}
+
+            {% for i in 1..count %}
+                {% set field = attribute(form, 'media_' ~ i) %}
+
+                <div class="form-group">
+                    {# Champ textarea caché #}
+                    {{ form_widget(field, {'attr': { 'id': field.vars.id }}) }}
+
+                </div>
+            {% endfor %}
+            {{ form_end(form) }}
+            <h2>Médias</h2>
+
+        </div>
+    </template>
+</turbo-stream>

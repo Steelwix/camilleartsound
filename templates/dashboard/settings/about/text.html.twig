@@ -1,0 +1,29 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div class="col-12 mt-5">
+            <h3 style="color:white">Modify the about</h3>
+
+            {{ form_start(form, {
+                'action': path('app_settings_about_text'),
+                'attr': {'data-turbo': 'true'}
+            }) }}
+
+            {% for i in 1..textCount %}
+                {# Récupère le champ correspondant #}
+                {% set field = attribute(form, 'text_' ~ i) %}
+
+                <div class="form-group">
+                    {# Champ textarea caché #}
+                    {{ form_widget(field, {'attr': {'style': 'display:none;', 'id': field.vars.id }}) }}
+
+                    {# Trix editor lié au champ #}
+                    <trix-editor input="{{ field.vars.id }}"></trix-editor>
+                </div>
+            {% endfor %}
+
+
+            {{ form_widget(form.save) }}
+            {{ form_end(form) }}
+        </div>
+    </template>
+</turbo-stream>

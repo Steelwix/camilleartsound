@@ -3,8 +3,11 @@
     namespace App\Controller\Back;
 
     use AllowDynamicProperties;
+    use App\Form\AboutDisplayType;
+    use App\Form\AboutTextType;
     use App\Form\BioMailType;
     use App\Form\BioTextType;
+    use App\Form\AboutMediasType;
     use App\Form\ContactsCollectionType;
     use App\Form\MediaType;
     use App\Form\ProjectSettingsType;
@@ -160,6 +163,74 @@
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             return $this->render('dashboard/settings/bio/socials.html.twig', [
                 'form' => $form->createView()
+            ]);
+        }
+
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/about/text', name: 'app_settings_about_text')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsAboutText(Request $request){
+            $about = $this->settingService->getAboutText();
+            $data = [];
+            foreach ($about as $setting) {
+                $data[$setting->getLabel()] = $setting->getValue();
+            }
+            $display = $this->settingService->getAboutDisplay();
+
+            $form = $this->createForm(AboutTextType::class,$data, ["textCount"=>$display]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->settingService->manageAboutText($form->getData());
+                $this->em->flush();
+                return $this->redirectToRoute('app_dashboard');
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/about/text.html.twig', [
+                'form' => $form->createView(), 'textCount' => $display
+            ]);
+        }
+
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/about/display', name: 'app_settings_about_display')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsAboutDisplay(Request $request){
+            $display = $this->settingService->getAboutDisplay();
+
+            $form = $this->createForm(AboutDisplayType::class, ['textCount' => $display]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $this->settingService->manageAboutDisplay($form->getData());
+                $this->em->flush();
+                return $this->redirectToRoute('app_dashboard');
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/about/display.html.twig', [
+                'form' => $form->createView()
+            ]);
+        }
+
+        #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/about/medias', name: 'app_settings_about_medias')]
+        #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
+        public function settingsAboutMedias(Request $request){
+            $display = $this->settingService->getAboutDisplay();
+            $form = $this->createForm(AboutMediasType::class,null, ['count' => $display]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $i = 1;
+                foreach ($form->getData() as $media) {
+                    $this->mediaService->createMedia($media, 'about'.$i);
+                    $i++;
+                }
+                $this->em->flush();
+                return $this->redirectToRoute('app_dashboard');
+
+            }
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            return $this->render('dashboard/settings/about/medias.html.twig', [
+                'form' => $form->createView(), 'count' => $display
             ]);
         }
     }

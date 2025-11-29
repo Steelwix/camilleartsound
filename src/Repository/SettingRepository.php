@@ -31,13 +31,27 @@ class SettingRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Setting
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findAboutText(): array
+    {
+        $results =  $this->createQueryBuilder('s')
+            ->andWhere('s.type = :type')
+            ->setParameter('type', 'about')
+            ->andWhere('s.label LIKE :label')
+            ->setParameter('label', 'text_%')
+            ->orderBy('LENGTH(s.label)', 'ASC')
+            ->addOrderBy('s.label', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+
+        // Reindex starting at 1
+        $indexed = [];
+        $i = 1;
+        foreach ($results as $r) {
+            $indexed[$i++] = $r;
+        }
+
+        return $indexed;
+    }
+
 }

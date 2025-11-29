@@ -54,7 +54,7 @@
                         <a href="{{ path('app_settings_bio_text') }}" class="btn btn-primary">Modifier la bio</a>
                         <a href="{{ path('app_settings_bio_contacts') }}" class="btn btn-primary">Modifier les contacts</a>
                         <a href="{{ path('app_settings_bio_mail') }}" class="btn btn-primary">Modifier le mail</a>
-                        <a href="{{ path('app_settings_bio_socials') }}" class="btn btn-warning">Modifier les réseaux sociaux</a>
+                        <a href="{{ path('app_settings_bio_socials') }}" class="btn btn-primary">Modifier les réseaux sociaux</a>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,9 @@
                     <h5 class="card-title text-center">ABOUT</h5>
                     <img src="https://images.pexels.com/photos/5011647/pexels-photo-5011647.jpeg" class="card-img-top" alt="Card Image">
                     <div class="card-body">
-                        <a href="{{ path('app_settings_media', {'spot': 'about'}) }}" class="btn btn-secondary disabled" data-turbo="onClick">Modifier la photo</a>
+                        <a href="{{ path('app_settings_about_display') }}" class="btn btn-primary" data-turbo="onClick">Modifier l'affichage</a>
+                        <a href="{{ path('app_settings_about_text') }}" class="btn btn-primary" data-turbo="onClick">Modifier le texte</a>
+                        <a href="{{ path('app_settings_about_medias') }}" class="btn btn-primary" data-turbo="onClick">Modifier les médias</a>
                     </div>
                 </div>
             </div>

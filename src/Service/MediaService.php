@@ -4,6 +4,7 @@
 
     use AllowDynamicProperties;
     use App\Entity\Media;
+    use App\Entity\Setting;
     use App\Factory\MediaFactory;
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -53,5 +54,13 @@
                 ->setParameter('spot', $spot);
 
             return $qb->getQuery()->getOneOrNullResult();
+        }
+
+        public function getAboutMedias(){
+            $medias = $this->em->getRepository(Setting::class)->findAboutMedias();
+            if (!$medias) {
+                return [];
+            }
+            return $medias;
         }
     }

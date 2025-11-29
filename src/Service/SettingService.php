@@ -219,4 +219,51 @@
             return $array;
         }
 
+        public function getAboutText() :array{
+            $about = $this->em->getRepository(Setting::class)->findAboutText();
+            if (!$about) {
+                return [];
+            }
+            return $about;
+        }
+
+        public function manageAboutText(array $rawTexts): void
+        {
+            foreach ($rawTexts as $key => $rawHtmlText) {
+
+            $cleanHtmlText = preg_replace('#^<div>(.*)</div>$#s', '$1', $rawHtmlText);
+            $text = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'about', 'label' => $key]);
+            if (!$text) {
+                $text = new Setting();
+                $this->em->persist($text);
+                $text->setType('about');
+            }
+
+            $text->setLabel($key);
+            $text->setValue($cleanHtmlText);
+
+            }
+
+        }
+        public function getAboutDisplay(){
+            $display = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'about', 'label' => 'textCount']);
+            if (!$display) {
+                return 1;
+            }
+            return $display->getValue();
+        }
+        public function manageAboutDisplay(array $form): void
+        {
+            $textCount = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'about', 'label' => 'textCount']);
+            if(!$textCount){
+                $textCount = new Setting();
+                $textCount->setLabel('textCount');
+                $textCount->setType('about');
+                $this->em->persist($textCount);
+            }
+            $textCount->setValue($form['textCount']);
+        }
+
+
+
     }

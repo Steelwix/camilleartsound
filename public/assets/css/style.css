@@ -199,7 +199,9 @@ trix-editor {
     flex-direction: column;
     justify-content: flex-start; /* Aligne en haut mais avec un padding */
     text-align: center;
-    padding-top: 15vh; /* Décalage depuis le haut */
+    padding-top: 15vh; /* Décalage depuis le haut */ inset: 0;
+    background: rgba(0,0,0,0.25); /* ajuste l'opacité */
+
 }
 
 /* Responsive pour téléphone */
@@ -207,7 +209,7 @@ trix-editor {
     .hero-section {
         justify-content: flex-start; /* Remonte le contenu */
         padding-top: 20vh; /* Ajoute un espace en haut */
-        height: auto; /* Permet de scroller si le contenu dépasse */
+        height: 60vh; /* Permet de scroller si le contenu dépasse */
     }
 }
 

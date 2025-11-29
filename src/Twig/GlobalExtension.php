@@ -26,6 +26,10 @@
             for($i=1; $i<=$this->settingService->getProjectDisplay(); $i++){
                 $projects[$i] = $this->mediaService->getMedia('project'.$i);
             }
+            $aboutMedias = [];
+            for($i=1; $i<=$this->settingService->getAboutDisplay(); $i++){
+                $aboutMedias[$i] = $this->mediaService->getMedia('about'.$i);
+            }
             return [
                 'headerMedia' => $this->mediaService->getMedia('header'),
                 'showreel' => $this->mediaService->getMedia('showreel'),
@@ -39,6 +43,9 @@
                 'bioMail' => $this->settingService->getBioMail(),
                 'bioSocials' => $this->settingService->getBioSocials(),
                 'ventures' => $this->settingService->getVentures(),
+                'aboutTexts' => $this->settingService->getAboutText(),
+                'aboutMedias' => $aboutMedias,
+                'aboutDisplay' => $this->settingService->getAboutDisplay(),
             ];
         }
     }

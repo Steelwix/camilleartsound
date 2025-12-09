@@ -7,14 +7,25 @@
                 'action': path('app_settings_bio_contacts'),
                 'attr': {'data-turbo': 'true'}
             }) }}
-
+            {% set i = 0 %}
             <ul id="contact-list"
                 data-index="{{ form.contacts|length > 0 ? form.contacts|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_widget(form.contacts.vars.prototype)|e('html_attr') }}"
             >
+                {% set i = 0 %}
                 {% for contact in form.contacts %}
-                    <li>{{ form_row(contact.text) }}</li>
-                    <li>{{ form_row(contact.position) }}</li>
+                    <div class="contact-item" id="contacts_collection_contacts_{{ i }}">
+                        <li>{{ form_row(contact.text) }}</li>
+                        <li>{{ form_row(contact.position) }}</li>
+
+                        <button type="button"
+                                class="btn btn-danger btn-sm remove-contact"
+                                data-target="contacts_collection_contacts_{{ i }}">
+                            Supprimer
+                        </button>
+                    </div>
+                    <br>
+                    {% set i = i + 1 %}
                 {% endfor %}
             </ul>
 
@@ -27,6 +38,7 @@
             {{ form_end(form) }}
 
             <script>
+                (() => {
                     const contactList = document.getElementById('contact-list');
                     const addBtn = document.getElementById('add-contact');
                     let index = parseInt(contactList.dataset.index, 10);
@@ -34,12 +46,44 @@
                     addBtn.addEventListener('click', () => {
                         const prototype = contactList.dataset.prototype;
                         const newForm = prototype.replace(/__name__/g, index);
+
+                        // créer le li parent pour ce contact
                         const li = document.createElement('li');
+                        li.classList.add('contact-item');
+                        li.id = 'contacts_collection_contacts_' + index;
+
+                        // ajouter le formulaire à l'intérieur
                         li.innerHTML = newForm;
+
+                        // ajouter le bouton supprimer
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'btn btn-danger btn-sm remove-contact mt-2';
+                        removeBtn.dataset.target = li.id;
+                        removeBtn.textContent = 'Supprimer';
+
+                        li.appendChild(removeBtn);
+
+                        // ajouter le li à la liste
                         contactList.appendChild(li);
+
                         index++;
                         contactList.dataset.index = index;
                     });
+
+
+                    document.addEventListener('click', function (e) {
+                        if (e.target.classList.contains('remove-contact')) {
+                            const targetId = e.target.dataset.target;
+
+                            const element = document.getElementById(targetId);
+
+                            if (element) {
+                                element.remove();
+                            }
+                        }
+                    });
+                })();
             </script>
         </div>
     </template>

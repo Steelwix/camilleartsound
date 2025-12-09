@@ -1,34 +1,39 @@
 <turbo-stream action="replace" target="dashboard">
     <template>
         <div id="dashboard">
-        {% set total = projectDisplay %}
-        {% set perRow = projectPerRow %}
+            {% set total = 6 %}
+            {% set perRow = projectPerRow %}
+            {% for i in 1..total %}
+                {% if (i - 1) % perRow == 0 %}
+                    <div class="row mb-4">
+                {% endif %}
 
-        {% for i in 0..(total - 1) %}
-            {% if i % perRow == 0 %}
-                <div class="row mb-4">
-            {% endif %}
+                <div class="col-md-12 col-lg-{{ 12 / perRow }} mb-5">
+                    <div class="card border-light rounded overflow-hidden shadow-sm">
+                        <div class="card-body p-2 bg-dark d-flex justify-content-center align-items-center" style="min-height: 200px;">
+                            {% if projects[i] is not null %}
+                                {% set ext = projects[i].extension ?? 'mp4' %}
+                                <video class="w-100 rounded" controls playsinline webkit-playsinline preload="metadata">
+                                    <source src="{{ asset('upload/project' ~ i ~ '/' ~ projects[i].name) }}" type="video/{{ ext }}">
+                                    This video seems unsupported by your browser
+                                </video>
 
-            <div  class="col">
-                <div class="card">
-                    <div class="card-body bg-dark">
+                            {% else %}
+                                <p class="text-light text-center m-0">Aucun projet</p>
+                            {% endif %}
 
-                        <video class="w-100" controls>
-{#                            <source src="{{ asset('upload/showreel/' ~ showreel) }}" type="video/{{ ext }}">#}
-                            This video seems unsupported by your browser
-                        </video>
-                        <a href="{{ path('app_settings_media', {'spot': 'project' ~ (i+1)}) }}"
-                           class="btn btn-primary w-100 mb-2" data-turbo="onClick">
-                            Modifier le projet {{ i + 1 }}
-                        </a>
+                        </div>
                     </div>
+                    <a href="{{ path('app_settings_media', {'spot': 'project' ~ (i)}) }}"
+                       class="btn btn-primary w-100 mb-2" data-turbo="onClick">
+                        Modifier le projet {{ i }}
+                    </a>
                 </div>
-            </div>
 
-            {% if (i + 1) % perRow == 0 or (i + 1) == total %}
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% if i % perRow == 0 or i == total %}
+                    </div>
+                {% endif %}
+            {% endfor %}
         </div>
     </template>
 </turbo-stream>

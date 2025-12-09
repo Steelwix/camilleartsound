@@ -12,12 +12,23 @@
                 data-index="{{ form.socials|length > 0 ? form.socials|last.vars.name + 1 : 0 }}"
                 data-prototype="{{ form_widget(form.socials.vars.prototype)|e('html_attr') }}"
             >
+
+
+                {% set i = 0 %}
+
                 {% for social in form.socials %}
+                <div class="contact-item" id="contacts_collection_contacts_{{ i }}">
+
                     <li class="mb-3">
                         {{ form_row(social.network) }}
+                        <div class="d-none">
+                            {{ form_row(social.customNetwork) }}
+                        </div>
                         {{ form_row(social.link) }}
                         {{ form_row(social.position) }}
                     </li>
+                    {% set i = i + 1 %}
+                </div>
                 {% endfor %}
             </ul>
 

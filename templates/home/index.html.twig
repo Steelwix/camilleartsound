@@ -59,25 +59,28 @@
                 </div>
 
 
-                {% set total = projectDisplay %}
+                {% set total = 6 %}
                 {% set perRow = projectPerRow %}
-
                 {% for i in 1..total %}
                     {% if (i - 1) % perRow == 0 %}
                         <div class="row mb-4">
                     {% endif %}
 
-                    <div class="col">
-                        <div class="card">
-                            <div class="card-body bg-dark">
+                    <div class="col-md-12 col-lg-{{ 12 / perRow }} mb-5">
+                        <div class="card border-light rounded overflow-hidden shadow-sm">
+                            <div class="card-body p-2 bg-dark d-flex justify-content-center align-items-center" style="min-height: 200px;">
                                 {% if projects[i] is not null %}
-                                    <video class="w-100" controls preload="metadata">
+                                    {% set ext = projects[i].extension ?? 'mp4' %}
+                                    <video class="w-100 rounded" controls playsinline webkit-playsinline preload="metadata">
                                         <source src="{{ asset('upload/project' ~ i ~ '/' ~ projects[i].name) }}" type="video/{{ ext }}">
                                         This video seems unsupported by your browser
                                     </video>
+                                {% else %}
+                                    <p class="text-light text-center m-0">Aucun projet</p>
                                 {% endif %}
                             </div>
                         </div>
+
                     </div>
 
                     {% if i % perRow == 0 or i == total %}

@@ -15,14 +15,21 @@
 
     </style>
     <div class="container">
-        <div class="row">
+        <div class="row mb-5">
             <div class="col-12">
                 <h1 class="text-center breathing">/ Dashboard /</h1>
-                <a href="{{ path('app_home') }}" class="btn btn-outline-dark glitch-btn text-white mx-2"
-                   data-text="Technical demo">Back</a>
             </div>
-        </div>
+            <div class="col-6 col-md-3 d-flex justify-content-center">
+                <a href="{{ path('app_home') }}" class="btn btn-outline-dark glitch-btn text-white mx-2"
+                   data-text="Technical demo"><i class="bi bi-arrow-left"></i>Home</a>
+            </div>
+            <div class="col-6 col-md-3 d-flex justify-content-center">
+                <a href="{{ path('app_dashboard') }}" class="btn btn-outline-dark glitch-btn text-white mx-2"
+                   data-text="Technical demo"><i class="bi bi-arrow-up"></i>Dashboard</a>
+            </div>
+            </div>
         <div class="row mt-5" id="dashboard">
+
             <div class="col-3">
                 <div class="card bg-dark">
                     <h5 class="card-title text-center">HEADER</h5>

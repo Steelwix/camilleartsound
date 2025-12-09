@@ -44,7 +44,8 @@
         #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function settingsMedia(Request $request, $spot){
 
-            $form = $this->createForm(MediaType::class);
+            $media = $this->mediaService->getMedia($spot);
+            $form = $this->createForm(MediaType::class, $media);
             $form->handleRequest($request);
 //            dd(
 //                $form->isSubmitted(),
@@ -61,13 +62,14 @@
             }
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             return $this->render('dashboard/settings/media.html.twig', [
-                'form' => $form->createView(), 'spot' => $spot
+                'form' => $form->createView(), 'spot' => $spot, 'media' => $media
             ]);
         }
 
     #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/projects', name: 'app_settings_projects')]
     #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
     public function settingsProjects(Request $request){
+            $projects = $this->mediaService->getProjects();
         $projectDisplay = $this->settingService->getProjectDisplay();
         $projectPerRow = $this->settingService->getProjectPerRow();
         $form = $this->createForm(ProjectSettingsType::class, [
@@ -81,7 +83,7 @@
         }
         $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
         return $this->render('dashboard/settings/projects.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(), 'projects' => $projects
         ]);
     }
 
@@ -116,9 +118,9 @@
         #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/contacts', name: 'app_settings_bio_contacts')]
         #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function settingsContacts(Request $request){
-            $form = $this->createForm(ContactsCollectionType::class);
+            $existingContacts = $this->settingService->getBioContacts();
+            $form = $this->createForm(ContactsCollectionType::class, ['contacts' => $existingContacts]);
             $form->handleRequest($request);
-
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->settingService->manageContacts($form->get('contacts')->getData());
                 return $this->redirectToRoute('app_dashboard');
@@ -126,15 +128,15 @@
             }
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             return $this->render('dashboard/settings/bio/contacts.html.twig', [
-                'form' => $form->createView()
+                'form' => $form->createView(), 'existingContacts' => $existingContacts
             ]);
         }
 
         #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/mail', name: 'app_settings_bio_mail')]
         #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function settingsBioMail(Request $request){
-            $bio = $this->settingService->getBioText();
-            $form = $this->createForm(BioMailType::class);
+            $bio = $this->settingService->getBioMail();
+            $form = $this->createForm(BioMailType::class, ["mail" => $bio]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -152,7 +154,8 @@
         #[\Symfony\Component\Routing\Annotation\Route('/dashboard/settings/bio/socials', name: 'app_settings_bio_socials')]
         #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function settingsSocials(Request $request){
-            $form = $this->createForm(SocialsCollectionType::class);
+            $socials = $this->settingService->getBioSocials();
+            $form = $this->createForm(SocialsCollectionType::class, ['socials' => $socials]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -162,7 +165,7 @@
             }
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
             return $this->render('dashboard/settings/bio/socials.html.twig', [
-                'form' => $form->createView()
+                'form' => $form->createView(), 'socials' => $socials
             ]);
         }
 

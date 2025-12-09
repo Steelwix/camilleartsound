@@ -10,6 +10,22 @@
                     {{ form_widget(form.media) }}
                 {{ form_end(form) }}
         </div>
+        {% if media is defined %}
+            <p>Media :</p>
+
+            {% set ext = media.name|split('.')|last %}
+
+            {% if ext in ['mp4', 'webm', 'ogg', 'mov'] %}
+                <video class="w-100 mb-3" controls playsinline preload="metadata">
+                    <source src="{{ asset('upload/' ~ spot ~ '/' ~ media.name) }}" type="video/{{ ext }}">
+                    Votre navigateur ne supporte pas la vidéo.
+                </video>
+            {% elseif ext in ['jpg', 'jpeg', 'png', 'gif', 'webp'] %}
+                <img src="{{ asset('upload/' ~ spot ~ '/' ~ media.name) }}" alt="Media" class="img-fluid mb-3">
+            {% else %}
+                <p class="text-warning">Format média non supporté : {{ ext }}</p>
+            {% endif %}
+        {% endif %}
 
 
     </template>

@@ -15,13 +15,17 @@
         {
             $builder
                 ->add('text', TextType::class, [
+                    'label' => 'Label',
                     'required' => true,
                 ])
                 ->add('position', IntegerType::class,  [
+                    'label' => 'Position',
                     'required' => true,
-                ]);
+                    'attr' => [
+                        'min' => 1,
+                ]]);
 
-            ;
+
         }
 
         public function configureOptions(OptionsResolver $resolver): void

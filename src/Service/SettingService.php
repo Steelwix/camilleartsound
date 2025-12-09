@@ -87,24 +87,20 @@
             $contacts = [];
             $savedContactsJson = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'contacts']);
 
-            if ($savedContactsJson) {
-                $savedContacts = json_decode($savedContactsJson->getValue(), true);
-                foreach ($savedContacts as $contact) {
-                    $contacts[$contact['position']]['position'] = $contact['text'];
-                }
-            }
-
             if (!$savedContactsJson) {
                 $savedContactsJson = new Setting();
                 $savedContactsJson->setLabel('contacts');
                 $savedContactsJson->setType('contacts');
                 $this->em->persist($savedContactsJson);
             }
-
-
+            $i = 0;
             foreach ($formContacts as $contact) {
-                $contacts[$contact['position']]['position'] = $contact['position'];
-                $contacts[$contact['position']]['text'] = $contact['text'];
+                if(!$contact['position'] || !$contact['text']) {
+                    continue;
+                }
+                $contacts[$i]['position'] = $contact['position'];
+                $contacts[$i]['text'] = $contact['text'];
+                $i++;
             }
 
             $contactsJson = json_encode($contacts);

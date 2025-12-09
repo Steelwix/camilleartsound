@@ -22,21 +22,14 @@
 
         public function getGlobals(): array
         {
-            $projects = [];
-            for($i=1; $i<=$this->settingService->getProjectDisplay(); $i++){
-                $projects[$i] = $this->mediaService->getMedia('project'.$i);
-            }
-            $aboutMedias = [];
-            for($i=1; $i<=$this->settingService->getAboutDisplay(); $i++){
-                $aboutMedias[$i] = $this->mediaService->getMedia('about'.$i);
-            }
+
             return [
                 'headerMedia' => $this->mediaService->getMedia('header'),
                 'showreel' => $this->mediaService->getMedia('showreel'),
                 'uploadDirectory' => $this->mediaService->uploadDirectory,
                 'projectDisplay' => $this->settingService->getProjectDisplay(),
                 'projectPerRow' => $this->settingService->getProjectPerRow(),
-                'projects' => $projects,
+                'projects' => $this->mediaService->getProjects(),
                 'bioText' => $this->settingService->getBioText(),
                 'bioImage' => $this->mediaService->getMedia('bio'),
                 'bioContacts' => $this->settingService->getBioContacts(),
@@ -44,7 +37,7 @@
                 'bioSocials' => $this->settingService->getBioSocials(),
                 'ventures' => $this->settingService->getVentures(),
                 'aboutTexts' => $this->settingService->getAboutText(),
-                'aboutMedias' => $aboutMedias,
+                'aboutMedias' => $this->mediaService->getAboutMedias(),
                 'aboutDisplay' => $this->settingService->getAboutDisplay(),
             ];
         }

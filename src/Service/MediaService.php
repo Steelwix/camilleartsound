@@ -56,11 +56,22 @@
             return $qb->getQuery()->getOneOrNullResult();
         }
 
-        public function getAboutMedias(){
-            $medias = $this->em->getRepository(Setting::class)->findAboutMedias();
-            if (!$medias) {
-                return [];
+
+        public function getProjects(): array
+        {
+            $projects = [];
+            for($i=1; $i<=$this->getProjectDisplay(); $i++){
+                $projects[$i] = $this->getMedia('project'.$i);
             }
-            return $medias;
+            return $projects;
+        }
+
+        public function getAboutMedias(): array
+        {
+            $abouts = [];
+            for($i=1; $i<=$this->getAboutDisplay(); $i++){
+                $abouts[$i] = $this->getMedia('about'.$i);
+            }
+            return $abouts;
         }
     }

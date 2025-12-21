@@ -34,8 +34,9 @@
                     <h4 class="header-subtitle text-white col-12 breathing">▲ Sound Designer // Technical SD ▼</h4>
 
                     <div class="col-12 breathing">
-                        <a href="{{ path('app_home_venture') }}" class="btn btn-outline-dark glitch-btn text-white mx-5" data-text="Show reel">Projects</a>
-                        <a href="#work" class="btn btn-outline-dark glitch-btn text-white mx-5" data-text="Technical demo">Work</a>
+                        <div class="empty-10"></div>
+                        <a href="{{ path('app_home_venture') }}" class=" glitch-btn text-white mx-5" data-text="Projects">Projects</a>
+                        <a href="#work" class="glitch-btn text-white mx-5" data-text="Work">Work</a>
                     </div>
 
                 </div>
@@ -45,15 +46,16 @@
         <div class="section-divider"></div>
         <div style="min-height: 100vh" id="work" class="container">
             <div class="row">
-                <div class="col-12 mb-5">
-                    <h2 class="text-center breathing">ShowReel 2024</h2>
-                </div>
                 <div class="col-12 col-md-6 mx-auto">
-                    <video class="w-100" controls  preload="metadata">
-                        <source src="{{ asset('upload/showreel/' ~ showreel.name) }}" type="video/{{ ext }}">
-                        This video seems unsupported by your browser
-                    </video>
+                    <h5 style="color:var(--color-secondary)">//_Showreel 2025_//</h5>
+                    <div class="cp-frame">
+                        <video class="w-100 cp-video" controls preload="metadata">
+                            <source src="{{ asset('upload/showreel/' ~ showreel.name) }}" type="video/{{ ext }}">
+                            This video seems unsupported by your browser
+                        </video>
+                    </div>
                 </div>
+
                 <div class="col-12 mt-5 mb-5">
                     <h3 class="text-center breathing">Selected Work</h3>
                 </div>
@@ -67,11 +69,12 @@
                     {% endif %}
 
                     <div class="col-md-12 col-lg-{{ 12 / perRow }} mb-5">
-                        <div class="card border-light rounded overflow-hidden shadow-sm">
-                            <div class="card-body p-2 bg-dark d-flex justify-content-center align-items-center" style="min-height: 200px;">
+                        <div class="ui-frame">
+                            <div class="ui-frame-body" style="min-height: 200px;">
+                                <p style="font-size: 0.5rem;color:var(--color-primary)" class="text-center">//_{{ projects[i].name }}_//</p>
                                 {% if projects[i] is not null %}
                                     {% set ext = projects[i].extension ?? 'mp4' %}
-                                    <video class="w-100 rounded" controls playsinline webkit-playsinline preload="metadata">
+                                    <video class="w-100" controls playsinline webkit-playsinline preload="metadata">
                                         <source src="{{ asset('upload/project' ~ i ~ '/' ~ projects[i].name) }}" type="video/{{ ext }}">
                                         This video seems unsupported by your browser
                                     </video>

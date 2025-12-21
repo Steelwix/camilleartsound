@@ -1,10 +1,11 @@
 :root {
     --color-primary: #ff252b;
     /*--color-primary: #fffc00;*/
-    --color-secondary: #00fff7;
-    --color-tertiary: #fffc00;
+    --color-tertiary: #00fff7;
+    --color-secondary: #fffc00;
     --color-pink: #e600ff;
 }
+
 
 h1,h2,h3,h4,h5{
     font-family: "Teko", sans-serif;
@@ -28,7 +29,7 @@ p {
 
 
 .header-title{
-    font-size: 4vw !important;
+    font-size: 7vw !important;
     text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
     margin-top: 10vh !important;
     /*max-height: 5vh !important;*/
@@ -40,8 +41,12 @@ p {
 }
 
 .bg-pitch-black {
-    background: linear-gradient(135deg, #000000 0%, #020c0a 100%) !important;
-    /*box-shadow: 0 0 10px var(--color-primary) inset;*/
+    /*background: linear-gradient(135deg, #000000 0%, #020c0a 100%) !important;*/
+    background-image: url("/upload/home_background/v3.png");
+    background-size: cover;      /* l’image remplit l’écran */
+    background-position: center; /* centrée */
+    background-repeat: no-repeat;
+    /*background-attachment: fixed; !* optionnel, effet sympa *!*/
 }
 
 @keyframes breathe {
@@ -83,18 +88,42 @@ trix-editor {
 }
 
 .glitch-btn {
+    width: min(20vh, 100%);
     position: relative;
     display: inline-block;
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Teko', sans-serif !important;
+    text-decoration: none;
     font-size: 24px;
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 3px;
     overflow: hidden;
-    border: 2px solid #ff0000; /* Bordure visible tout le temps */
-    padding: 12px 32px;
+
+    border: 2px solid var(--color-primary);
+    border-left-width: 0px;
+    border-left-color: var(--color-primary);
+    padding: 12px 32px 12px 56px; /* espace pour le chevron */
     background-color: rgba(66, 61, 61, 0.71) !important;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
     transition: all 0.3s ease;
+}
+.glitch-btn::before {
+    content: "";
+    position: absolute;
+    left: -0px; /* = largeur de la border-left */
+    top: 0;
+    bottom: 0;
+
+    width: 24px;
+    background: var(--color-primary);
+
+    clip-path: polygon(
+            0 0,
+            100% 50%,
+            0 100%
+    );
+
+    z-index: 10;
 }
 
 .glitch-btn:after {
@@ -108,16 +137,24 @@ trix-editor {
     background: transparent;
     clip-path: var(--slice-0);
     text-shadow: -3px -3px 0px #ff252b, 3px 3px 0px #00e6f6;
+
+    z-index: 2; /* au-dessus du chevron */
 }
 
 .glitch-btn:hover {
     color: #00fff7;
-    border-color: #00fff7; /* Bordure confirmée */
     box-shadow: 0 0 15px #00fff7; /* Glow autour mais bordure visible */
+    border-color: #00fff7;
+    border-left-color: #00fff7;
+    border-left-width: 20px; /* ← bordure gauche plus épaisse */
 }
 
 .glitch-btn:hover:after {
     animation: glitch 1s steps(2, end) infinite;
+}
+
+.glitch-btn:hover::before {
+    background: #00fff7;
 }
 
 /* Variables pour slices */
@@ -182,14 +219,41 @@ trix-editor {
 .empty-10{
     height: 10vh;
 }
-
 .section-divider {
     width: 50%;
     margin: 5vh auto;
     height: 2px;
     background-color: var(--color-secondary);
-    box-shadow: 0 0 10px var(--color-secondary), 0 0 20px var(--color-secondary); /* Glow cyberpunk */
+
+    box-shadow:
+            0 0 10px var(--color-secondary),
+            0 0 20px var(--color-secondary);
+
+    transform: scaleX(0);
+    transform-origin: center;
+
+    animation:
+            divider-grow 15s ease-out forwards,
+            divider-flicker 1.5s linear infinite;
 }
+
+@keyframes divider-grow {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes divider-flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 0.85; }
+    94% { opacity: 1; }
+    96% { opacity: 0.5; }
+}
+
+
 
 .hero-section {
     position: relative;
@@ -255,4 +319,60 @@ a:hover .nav-link {
 .social-links a:hover {
     color: var(--color-primary);
     text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+}
+
+
+.cp-frame {
+    content: "";
+    inset: -6px; /* élargit le contour */
+    border: 10px solid var(--color-secondary); /* CYAN */
+    pointer-events: none;
+}
+
+.cp-video {
+    background: black;
+    display: block;
+}
+
+.ui-frame {
+    position: relative;
+}
+
+/* Haut-gauche + bas-droite */
+.ui-frame::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    pointer-events: none;
+    background:
+            linear-gradient(var(--color-primary), var(--color-primary)) top left / 14px 2px no-repeat,
+            linear-gradient(var(--color-primary), var(--color-primary)) top left / 2px 14px no-repeat,
+
+            linear-gradient(var(--color-primary), var(--color-primary)) bottom right / 14px 2px no-repeat,
+            linear-gradient(var(--color-primary), var(--color-primary)) bottom right / 2px 14px no-repeat;
+}
+
+/* Haut-droite + bas-gauche */
+.ui-frame::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    pointer-events: none;
+    background:
+            linear-gradient(var(--color-primary), var(--color-primary)) top right / 14px 2px no-repeat,
+            linear-gradient(var(--color-primary), var(--color-primary)) top right / 2px 14px no-repeat,
+
+            linear-gradient(var(--color-primary), var(--color-primary)) bottom left / 14px 2px no-repeat,
+            linear-gradient(var(--color-primary), var(--color-primary)) bottom left / 2px 14px no-repeat;
+}
+
+/* corps */
+.ui-frame-body {
+    width: 100%;
+}
+
+/* vidéo SAFE */
+.ui-frame video {
+    display: block;
+    background: black;
 }

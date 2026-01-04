@@ -1,10 +1,12 @@
 :root {
     --color-primary: #ff252b;
-    /*--color-primary: #fffc00;*/
-    --color-tertiary: #00fff7;
     --color-secondary: #fffc00;
+    --color-tertiary: #00fff7;
+    --color-dark: #282828;
+    --color-light: #e3d8f1;
     --color-pink: #e600ff;
 }
+
 
 
 h1,h2,h3,h4,h5{
@@ -106,6 +108,7 @@ trix-editor {
     background-color: rgba(66, 61, 61, 0.71) !important;
     box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
     transition: all 0.3s ease;
+
 }
 .glitch-btn::before {
     content: "";
@@ -248,9 +251,9 @@ trix-editor {
 
 @keyframes divider-flicker {
     0%, 100% { opacity: 1; }
-    92% { opacity: 0.85; }
-    94% { opacity: 1; }
-    96% { opacity: 0.5; }
+    70% { opacity: 0.6; }
+    80% { opacity: 1; }
+    90% { opacity: 0.4; }
 }
 
 
@@ -279,14 +282,72 @@ trix-editor {
 
 .bio-section {
     position: relative;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary), var(--color-pink));
+
+    background: linear-gradient(
+            135deg,
+            #05060a,
+            var(--color-primary),
+            var(--color-secondary)
+    );
     background-size: 300% 300%;
-    animation: moveGradient 60s ease infinite;
+    animation: moveGradient 40s linear infinite;
+
     color: #fff;
     overflow: hidden;
-    padding: 50px 20px;
-    z-index: 1;
+    padding: 60px 20px;
 }
+
+#canvas {
+    position: relative;
+    width: 100vw;
+    height: 75vh;
+    z-index: 10;
+}
+
+/* Nodes */
+.node {
+    position: absolute;
+
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+}
+
+.node.fixed {
+    cursor: default;
+}
+
+#nodeB {
+    z-index: 20;
+    cursor: grab;
+}
+
+/* SVG */
+#links {
+    position: absolute;
+    inset: 0;              /* ← couvre tout le canvas */
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 15;
+
+    animation:
+            divider-flicker 1.5s linear infinite;
+}
+
+
+#link {
+    stroke: #ffdd00;
+    stroke-width: 2;
+}
+
+#link-glow {
+    stroke: #ffdd00;
+    stroke-width: 8;
+    opacity: 1;
+    filter: blur(10px);
+}
+
 
 /* Animation du dégradé */
 @keyframes moveGradient {
@@ -323,11 +384,81 @@ a:hover .nav-link {
 
 
 .cp-frame {
-    content: "";
-    inset: -6px; /* élargit le contour */
-    border: 10px solid var(--color-secondary); /* CYAN */
-    pointer-events: none;
+    position: relative;
+    border: 3px solid var(--color-secondary);
+    padding: 4px;
 }
+
+
+.cp-block {
+    position: relative;
+    padding: 12px;
+}
+
+.cp-title {
+    position: relative;
+    display: inline-block;
+    padding: 6px 18px 6px 14px;
+
+    font-family: 'Teko', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    color: var(--color-dark);
+    background: var(--color-secondary);
+
+    border: 3px solid var(--color-secondary);
+    border-bottom: none;
+
+    margin-bottom: -3px;
+
+    clip-path: polygon(
+            0 0,
+            calc(100% - 16px) 0,
+            100% 16px,
+            100% 100%,
+            0 100%
+    );
+}
+
+
+
+
+
+
+
+/* Angles HUD */
+.cp-block::after {
+    content: "";
+    position: absolute;
+    inset: -8px; /* distance entre texte+vidéo et angles */
+    pointer-events: none;
+
+    background:
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            top left / 14px 2px no-repeat,
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            top left / 2px 14px no-repeat,
+
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            top right / 14px 2px no-repeat,
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            top right / 2px 14px no-repeat,
+
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            bottom left / 14px 2px no-repeat,
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            bottom left / 2px 14px no-repeat,
+
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            bottom right / 14px 2px no-repeat,
+            linear-gradient(var(--color-secondary), var(--color-secondary))
+            bottom right / 2px 14px no-repeat;
+}
+
+
+
 
 .cp-video {
     background: black;
@@ -336,43 +467,65 @@ a:hover .nav-link {
 
 .ui-frame {
     position: relative;
+    opacity: 0;
 }
 
-/* Haut-gauche + bas-droite */
-.ui-frame::before {
+/* ANGLES */
+.ui-frame::before,
+.ui-frame::after {
     content: "";
     position: absolute;
     inset: -6px;
     pointer-events: none;
+    opacity: 1; /* 🔥 visibles dès le début */
+}
+
+.ui-frame.is-visible {
+    animation: ui-frame-in 0.2s ease-out forwards;
+}
+
+.ui-frame.is-visible::before,
+.ui-frame.is-visible::after {
+}
+/* Haut-gauche + bas-droite */
+.ui-frame::before {
     background:
             linear-gradient(var(--color-primary), var(--color-primary)) top left / 14px 2px no-repeat,
             linear-gradient(var(--color-primary), var(--color-primary)) top left / 2px 14px no-repeat,
-
             linear-gradient(var(--color-primary), var(--color-primary)) bottom right / 14px 2px no-repeat,
             linear-gradient(var(--color-primary), var(--color-primary)) bottom right / 2px 14px no-repeat;
 }
 
 /* Haut-droite + bas-gauche */
 .ui-frame::after {
-    content: "";
-    position: absolute;
-    inset: -6px;
-    pointer-events: none;
     background:
             linear-gradient(var(--color-primary), var(--color-primary)) top right / 14px 2px no-repeat,
             linear-gradient(var(--color-primary), var(--color-primary)) top right / 2px 14px no-repeat,
-
             linear-gradient(var(--color-primary), var(--color-primary)) bottom left / 14px 2px no-repeat,
             linear-gradient(var(--color-primary), var(--color-primary)) bottom left / 2px 14px no-repeat;
 }
 
-/* corps */
 .ui-frame-body {
     width: 100%;
 }
 
-/* vidéo SAFE */
 .ui-frame video {
-    display: block;
-    background: black;
+    opacity: 0;
+    transform: scale(0.97);
+    animation: ui-frame-in 0.2s ease-out forwards;
+    animation-delay: 1s;
+}
+
+@keyframes ui-frame-in {
+    0% {
+        opacity: 0;
+        transform: scale(0.2);
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }

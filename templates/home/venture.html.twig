@@ -43,18 +43,18 @@
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
-                    <a href="{{ path('app_home') }}" class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5"
-                       data-text="Technical demo">Back</a>
+                    <a href="{{ path('app_home') }}" class="glitch-btn text-white m-5"
+                       data-text="BACK">Back</a>
 
                     {% if editMode == false %}
                         <a href="{{ path('app_venture_page_edit') }}"
-                           class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5 btn-admin"
-                           data-text="Technical demo">Edit</a>
+                           class="glitch-btn text-white m-5 btn-admin"
+                           data-text="EDIT">Edit</a>
                     {% endif %}
 
                     <a href="{{ path('app_home_venture') }}"
-                       class="btn btn-outline-dark glitch-btn text-white mx-2 mt-5 btn-admin btn-edit"
-                       data-text="Technical demo">Confirm</a>
+                       class="glitch-btn text-white m-5 btn-edit"
+                       data-text="CONFIRM">Confirm</a>
                 </div>
             </div>
 

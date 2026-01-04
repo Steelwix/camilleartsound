@@ -32,6 +32,9 @@
         letter-spacing: 2px;
         display: inline-block;
         overflow: hidden;
+        text-shadow:
+                0 1px 2px rgb(0, 0, 0);
+        transition: text-shadow 0.25s ease, color 0.25s ease;
     }
 
     .glitch-link::after {
@@ -85,7 +88,8 @@
 <header class="fixed-top d-flex justify-content-center mt-3">
     <nav class="navbar">
         <a class="nav-link fw-bold glitch-link" data-text="HOME" href="#home">HOME</a>
-        <a class="nav-link fw-bold glitch-link" data-text="WORK" href="#work">WORK</a>
+        <a class="nav-link fw-bold glitch-link" data-text="PROJECTS" href="{{ path('app_home_venture') }}">PROJECTS</a>
+        <a class="nav-link fw-bold glitch-link" data-text="DEMO" href="#work">DEMO</a>
         <a class="nav-link fw-bold glitch-link" data-text="ABOUT" href="{{ path('app_home_about') }}">ABOUT</a>
         {% if app.user %}
             <a class="nav-link fw-bold glitch-link"

@@ -36,7 +36,7 @@
                     <div class="col-12 breathing">
                         <div class="empty-10"></div>
                         <a href="{{ path('app_home_venture') }}" class=" glitch-btn text-white mx-5" data-text="Projects">Projects</a>
-                        <a href="#work" class="glitch-btn text-white mx-5" data-text="Work">Work</a>
+                        <a href="#work" class="glitch-btn text-white mx-5" data-text="Demo">Demo</a>
                     </div>
 
                 </div>
@@ -47,14 +47,17 @@
         <div style="min-height: 100vh" id="work" class="container">
             <div class="row">
                 <div class="col-12 col-md-6 mx-auto">
-                    <h5 style="color:var(--color-secondary)">//_Showreel 2025_//</h5>
-                    <div class="cp-frame">
-                        <video class="w-100 cp-video" controls preload="metadata">
-                            <source src="{{ asset('upload/showreel/' ~ showreel.name) }}" type="video/{{ ext }}">
-                            This video seems unsupported by your browser
-                        </video>
+                    <div class="cp-block">
+                        <h5 class="cp-title">//_Showreel 2025_//</h5>
+
+                        <div class="cp-frame">
+                            <video class="w-100 cp-video" controls preload="metadata">
+                                <source src="{{ asset('upload/showreel/' ~ showreel.name) }}" type="video/{{ ext }}">
+                            </video>
+                        </div>
                     </div>
                 </div>
+
 
                 <div class="col-12 mt-5 mb-5">
                     <h3 class="text-center breathing">Selected Work</h3>
@@ -70,7 +73,7 @@
 
                     <div class="col-md-12 col-lg-{{ 12 / perRow }} mb-5">
                         <div class="ui-frame">
-                            <div class="ui-frame-body" style="min-height: 200px;">
+                            <div class="ui-frame-body" style="min-height: 200px; --i: {{ i }}">
                                 <p style="font-size: 0.5rem;color:var(--color-primary)" class="text-center">//_{{ projects[i].name }}_//</p>
                                 {% if projects[i] is not null %}
                                     {% set ext = projects[i].extension ?? 'mp4' %}
@@ -93,27 +96,60 @@
 
             </div>
         </div>
-        <div class="section-divider"></div>
+        <div id="canvas" class="d-none d-xl-block">
+            <div id="nodeA" class="node fixed" style="max-width: 350px;">
+                <img class="img-fluid mx-auto rounded-circle"
+                     src="{{ asset('upload/bio/' ~ bioImage.name) }}"
+                     alt="Photo de profil"
+                     style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
+            </div>
 
-        <div id="about" class="container-fluid p-4 text-dark  bio-section" style="">
+            <div id="nodeB" class="node cp-block" style="max-width: 60vh;">
+                <h5 class="cp-title">Camille Saby</h5>
+                <p id="anchor" class="cp-video cp-frame">{{ bioText|raw }}</p>
+            </div>
+
+            <svg id="links">
+                <defs>
+
+                    <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="6" result="blur1"/>
+                        <feGaussianBlur stdDeviation="12" result="blur2"/>
+                        <feMerge>
+                            <feMergeNode in="blur2"/>
+                            <feMergeNode in="blur1"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+
+
+                <line id="link-glow" />
+
+                <line id="link" filter="url(#neon-glow)" />
+            </svg>
+        </div>
+
+        <div class="d-xl-none">
             <div class="row justify-content-center">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-6 mx-auto" style="max-width: 350px;">
-                            <img class="img-fluid mx-auto rounded-circle"
-                                 src="{{ asset('upload/bio/' ~ bioImage.name) }}"
-                                 alt="Photo de profil"
-                                 style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
-                        </div>
+                <div class="col-6" style="max-width: 350px;">
+                    <div class="ratio ratio-1x1 rounded-circle overflow-hidden">
+                        <img class="img-fluid w-100 h-100"
+                             src="{{ asset('upload/bio/' ~ bioImage.name) }}"
+                             alt="Photo de profil"
+                             style="object-fit: cover;">
+                    </div>
+                </div>
 
-                        <div class="col-md-6 my-auto">
-                            <h5>Camille Saby</h5>
-                            <p>{{ bioText|raw }}</p>
-                        </div>
+                <div class="col-6 mt-3">
+                    <div id="nodeB" class="node cp-block">
+                        <h5 class="cp-title">Camille Saby</h5>
+                        <p id="anchor" class="cp-video cp-frame">{{ bioText|raw }}</p>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <div class="section-divider"></div>
 
@@ -151,4 +187,191 @@
         </div>
 <div class="empty-10"></div>
     </div>
-{% endblock %}
+
+    <script>
+        /* ========================
+           RÉFÉRENCES DOM
+        ======================== */
+        const canvas = document.getElementById("canvas");
+        const nodeA  = document.getElementById("nodeA");
+        const nodeB  = document.getElementById("nodeB");
+        const anchor = document.getElementById("anchor");
+        const line   = document.getElementById("link");
+
+        /* ========================
+           CONFIG
+        ======================== */
+        const MIN_DISTANCE = 500;
+
+        /* ========================
+           DRAG STATE
+        ======================== */
+        let dragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        /* ========================
+           POSITIONS INITIALES
+        ======================== */
+        nodeA.style.left = "200px";
+        nodeA.style.top  = "300px";
+        nodeB.style.left = "500px";
+        nodeB.style.top  = "150px";
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                    observer.unobserve(entry.target); // une seule fois
+                }
+            });
+        }, {
+            threshold: 0.3 // 30% visible
+        });
+
+        document.querySelectorAll(".ui-frame").forEach(el => {
+            observer.observe(el);
+        });
+        /* ========================
+           DRAG START (B UNIQUEMENT)
+        ======================== */
+        document.addEventListener("mousedown", (e) => {
+            const target = e.target.closest("#nodeB");
+            if (!target) return;
+
+            dragging = true;
+            offsetX = e.clientX - nodeB.offsetLeft;
+            offsetY = e.clientY - nodeB.offsetTop;
+        });
+
+        /* ========================
+           DRAG MOVE
+        ======================== */
+        document.addEventListener("mousemove", (e) => {
+            if (!dragging) return;
+
+            const rectCanvas = canvas.getBoundingClientRect();
+            const rectA = nodeA.getBoundingClientRect();
+
+            let x = e.clientX - offsetX;
+            let y = e.clientY - offsetY;
+
+            /* Clamp dans le canvas */
+            const minX = 0;
+            const minY = 0;
+            const maxX = rectCanvas.width - nodeB.offsetWidth;
+            const maxY = rectCanvas.height - nodeB.offsetHeight;
+
+            x = Math.min(Math.max(x, minX), maxX);
+            y = Math.min(Math.max(y, minY), maxY);
+
+            /* Centre de A (viewport) */
+            const ax = rectA.left + rectA.width / 2;
+            const ay = rectA.top  + rectA.height / 2;
+
+            /* Centre potentiel de B (viewport) */
+            const bx = x + rectCanvas.left + nodeB.offsetWidth / 2;
+            const by = y + rectCanvas.top  + nodeB.offsetHeight / 2;
+
+            const dx = bx - ax;
+            const dy = by - ay;
+            const dist = Math.hypot(dx, dy);
+
+            /* Distance minimale */
+            if (dist < MIN_DISTANCE) return;
+
+            nodeB.style.left = x + "px";
+            nodeB.style.top  = y + "px";
+
+            updateLine();
+        });
+
+        /* ========================
+           DRAG END
+        ======================== */
+        document.addEventListener("mouseup", () => {
+            dragging = false;
+        });
+
+        /* ========================
+           UPDATE LINE (CERCLE → RECTANGLE)
+        ======================== */
+        function updateLine() {
+            const rectA = nodeA.getBoundingClientRect();
+            const rectB = anchor.getBoundingClientRect();
+            const rectC = canvas.getBoundingClientRect();
+
+            /* Centres (coordonnées canvas) */
+            const ax = rectA.left + rectA.width  / 2 - rectC.left;
+            const ay = rectA.top  + rectA.height / 2 - rectC.top;
+
+            const bx = rectB.left + rectB.width  / 2 - rectC.left;
+            const by = rectB.top  + rectB.height / 2 - rectC.top;
+
+            /* Direction */
+            const dx = bx - ax;
+            const dy = by - ay;
+
+            const len = Math.hypot(dx, dy);
+            if (len === 0) return;
+
+            const ux = dx / len;
+            const uy = dy / len;
+
+            /* --- A : cercle --- */
+            const rA = rectA.width / 2;
+
+            const startX = ax + ux * rA;
+            const startY = ay + uy * rA;
+
+            /* --- B : rectangle (anchor) --- */
+            const halfW = rectB.width  / 2;
+            const halfH = rectB.height / 2;
+
+            const tx = halfW / Math.abs(ux);
+            const ty = halfH / Math.abs(uy);
+            const t  = Math.min(tx, ty);
+
+            const endX = bx - ux * t;
+            const endY = by - uy * t;
+
+            /* SVG update */
+            line.setAttribute("x1", startX);
+            line.setAttribute("y1", startY);
+            line.setAttribute("x2", endX);
+            line.setAttribute("y2", endY);
+        }
+
+        function setInitialPositions() {
+            const rectCanvas = canvas.getBoundingClientRect();
+
+            /* PHOTO (A) : légèrement à gauche */
+            const aX = rectCanvas.width * 0.25 - nodeA.offsetWidth / 2;
+            const aY = rectCanvas.height * 0.3;
+
+            const bX = rectCanvas.width * 0.65 - nodeB.offsetWidth / 2; //distance X entre photo et texte
+            const bY = rectCanvas.height * 0.42; //distance Y entre photo et texte
+
+            nodeA.style.left = `${aX}px`;
+            nodeA.style.top  = `${aY}px`;
+
+            nodeB.style.left = `${bX}px`;
+            nodeB.style.top  = `${bY}px`;
+        }
+
+
+
+        /* ========================
+           INIT
+        ======================== */
+        window.addEventListener("load", () => {
+            setInitialPositions();
+            updateLine();
+        });
+
+        window.addEventListener("resize", () => {
+            setInitialPositions();
+            updateLine();
+        });
+    </script>
+
+        {% endblock %}

@@ -62,36 +62,48 @@
             <div id="ventures" class="row row-cols-2 row-cols-md-{{ projectPerRow }} g-4 {% if editMode %}edit-mode{% endif %}">
                 {% for venture in ventures %}
                     <div class="col venture-item" data-id="{{ venture.id }}">
-                        <div class="card h-100 position-relative">
-                            <a href="{{ venture.link }}" target="_blank" class="stretched-link"></a>
+                        <div class="ui-frame is-visible position-relative">
 
-                            <div class="card-body bg-dark text-center">
+                            {# lien cliquable global #}
+                            <a href="{{ venture.link }}"
+                               target="_blank"
+                               class="stretched-link"></a>
+
+                            <div class="ui-frame-body bg-dark text-center"
+                                 style="min-height: 200px; --i: {{ loop.index }}">
+
                                 <img src="{{ asset('upload/venture' ~ venture.id ~ '/' ~ venture.media.name) }}"
                                      alt="{{ venture.label }}"
                                      class="img-fluid rounded"
                                      style="max-height: 200px; object-fit: cover;">
+
                                 <div class="d-flex justify-content-between align-items-center mt-2">
                                     <p class="m-0">{{ venture.label }}</p>
+
                                     {% if editMode %}
-                                        <a href="{{ path('app_home_venture_edit_edit', {'id': venture.id}) }}"
-                                           class="btn btn-sm btn-outline-light btn-edit-venture position-relative"
-                                           style="z-index: 2;">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <span class="btn btn-sm btn-outline-secondary cursor-grab" style="z-index:2;">
-                                        <i class="bi bi-arrows-move"></i>
-                                        </span>
-                                        <a href="{{ path('app_home_venture_edit_delete', {'id': venture.id}) }}"
-                                           class="btn btn-sm btn-outline-danger position-relative btn-delete-venture"
-                                           style="z-index: 2;">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                        <div class="d-flex gap-2" style="z-index:2;">
+                                            <a href="{{ path('app_home_venture_edit_edit', {'id': venture.id}) }}"
+                                               class="btn btn-sm btn-outline-light">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            <span class="btn btn-sm btn-outline-secondary cursor-grab">
+                                <i class="bi bi-arrows-move"></i>
+                            </span>
+
+                                            <a href="{{ path('app_home_venture_edit_delete', {'id': venture.id}) }}"
+                                               class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
                                     {% endif %}
                                 </div>
+
                             </div>
                         </div>
                     </div>
                 {% endfor %}
+
             </div>
 
             <div class="row">
@@ -99,9 +111,11 @@
                    class="btn btn-outline-dark glitch-btn text-white mx-2 btn-edit btn-admin mt-5"
                    data-text="Technical demo">Add</a>
             </div>
+
             {% if editMode %}
                 <script>
                     (() => {
+
                         const container = document.getElementById("ventures");
                         if (!container) return;
 
@@ -153,6 +167,11 @@
                     })();
                 </script>
             {% endif %}
+
+            <div class="col-12 d-flex justify-content-center">
+                <a href="{{ path('app_home') }}" class="glitch-btn text-white m-5"
+                   data-text="BACK">Back</a>
+            </div>
         </div>
     </template>
 </turbo-stream>

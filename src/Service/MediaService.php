@@ -51,7 +51,8 @@
             $qb->select('m.name')
                 ->from(Media::class, 'm')
                 ->where('m.type = :spot')
-                ->setParameter('spot', $spot);
+                ->setParameter('spot', $spot)
+            ->orderBy('m.id', 'DESC');
 
             return $qb->getQuery()->getOneOrNullResult();
         }

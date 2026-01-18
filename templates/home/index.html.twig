@@ -35,7 +35,7 @@
 
                     <div class="col-12 breathing">
                         <div class="empty-10"></div>
-                        <a href="{{ path('app_home_venture') }}" class=" glitch-btn text-white mx-5" data-text="Projects">Projects</a>
+                        <a href="{{ path('app_home_venture') }}" class="glitch-btn text-white mx-5" data-text="Projects">Projects</a>
                         <a href="#work" class="glitch-btn text-white mx-5" data-text="Demo">Demo</a>
                     </div>
 
@@ -96,6 +96,11 @@
 
             </div>
         </div>
+
+        <div class="section-divider"></div>
+
+
+
         <div id="canvas" class="d-none d-xl-block">
             <div id="nodeA" class="node fixed" style="max-width: 350px;">
                 <img class="img-fluid mx-auto rounded-circle"
@@ -189,6 +194,7 @@
     </div>
 
     <script>
+        (() => {
         /* ========================
            RÉFÉRENCES DOM
         ======================== */
@@ -217,16 +223,18 @@
         nodeA.style.top  = "300px";
         nodeB.style.left = "500px";
         nodeB.style.top  = "150px";
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("is-visible");
-                    observer.unobserve(entry.target); // une seule fois
-                }
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add("is-visible");
+                            observer.unobserve(entry.target); // une seule fois
+                        }, 300); // 0.3s
+                    }
+                });
+            }, {
+                threshold: 0.3
             });
-        }, {
-            threshold: 0.3 // 30% visible
-        });
 
         document.querySelectorAll(".ui-frame").forEach(el => {
             observer.observe(el);
@@ -372,6 +380,7 @@
             setInitialPositions();
             updateLine();
         });
+        })();
     </script>
 
         {% endblock %}

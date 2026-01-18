@@ -1,11 +1,16 @@
 :root {
     --color-primary: #ff252b;
+    --color-primary-rgb: 255, 37, 43;
+
     --color-secondary: #fffc00;
     --color-tertiary: #00fff7;
+    --color-tertiary-rgb: 0, 255, 247;
+
     --color-dark: #282828;
     --color-light: #e3d8f1;
     --color-pink: #e600ff;
 }
+
 
 
 
@@ -88,77 +93,92 @@ trix-editor {
 .trix-button {
     background-color: #ffffff !important;
 }
-
 .glitch-btn {
-    width: min(20vh, 100%);
     position: relative;
     display: inline-block;
-    font-family: 'Teko', sans-serif !important;
-    text-decoration: none;
-    font-size: 24px;
-    color: #fff;
-    text-transform: uppercase;
-    letter-spacing: 3px;
     overflow: hidden;
+    padding: 8px 36px;
+    font-family: 'Teko', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff;
 
-    border: 2px solid var(--color-primary);
-    border-left-width: 0px;
-    border-left-color: var(--color-primary);
-    padding: 12px 32px 12px 56px; /* espace pour le chevron */
-    background-color: rgba(66, 61, 61, 0.71) !important;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
-    transition: all 0.3s ease;
+    background: rgba(20, 20, 20, 0.75);
+    border: 1px solid var(--color-primary);
 
+    backdrop-filter: blur(6px);
+
+    box-shadow:
+            0 10px 35px rgba(0, 0, 0, 0.75),
+            0 0 25px rgba(var(--color-primary-rgb), 0.25),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+
+    transition: all 0.25s ease;
+    overflow: hidden;
 }
+
+/* ligne tech à gauche */
 .glitch-btn::before {
     content: "";
     position: absolute;
-    left: -0px; /* = largeur de la border-left */
-    top: 0;
-    bottom: 0;
+    left: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 3px;
 
-    width: 24px;
     background: var(--color-primary);
+    box-shadow: none;
 
-    clip-path: polygon(
-            0 0,
-            100% 50%,
-            0 100%
-    );
-
-    z-index: 10;
+    transition:
+            top 0.25s ease,
+            bottom 0.25s ease,
+            box-shadow 0.25s ease,
+            background 0.25s ease;
 }
 
-.glitch-btn:after {
+/* TEXTE GLITCH */
+.glitch-btn::after {
     content: attr(data-text);
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-    background: transparent;
-    clip-path: var(--slice-0);
-    text-shadow: -3px -3px 0px #ff252b, 3px 3px 0px #00e6f6;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    z-index: 2; /* au-dessus du chevron */
+    color: currentColor;
+    pointer-events: none;
+    clip-path: var(--slice-0);
 }
 
+/* hover */
 .glitch-btn:hover {
     color: #00fff7;
-    box-shadow: 0 0 15px #00fff7; /* Glow autour mais bordure visible */
+
     border-color: #00fff7;
-    border-left-color: #00fff7;
-    border-left-width: 20px; /* ← bordure gauche plus épaisse */
+    box-shadow:
+            0 8px 28px rgba(var(--color-tertiary-rgb), 0.25),
+            inset 0 0 0 1px rgba(var(--color-tertiary-rgb),0.35);
 }
 
-.glitch-btn:hover:after {
+.glitch-btn:hover::after {
     animation: glitch 1s steps(2, end) infinite;
+
 }
+
 
 .glitch-btn:hover::before {
-    background: #00fff7;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-tertiary);
+    box-shadow:
+            0 0 12px rgba(var(--color-tertiary-rgb), 0.6),
+            0 0 24px rgba(var(--color-tertiary-rgb), 0.35);
 }
+
 
 /* Variables pour slices */
 .glitch-btn:after {
@@ -529,3 +549,5 @@ a:hover .nav-link {
         transform: scale(1);
     }
 }
+
+

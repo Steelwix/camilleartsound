@@ -74,13 +74,16 @@
                     <div class="col-md-12 col-lg-{{ 12 / perRow }} mb-5">
                         <div class="ui-frame">
                             <div class="ui-frame-body" style="min-height: 200px; --i: {{ i }}">
-                                <p style="font-size: 0.5rem;color:var(--color-primary)" class="text-center">//_{{ projects[i].name }}_//</p>
-                                {% if projects[i] is not null %}
-                                    {% set ext = projects[i].extension ?? 'mp4' %}
-                                    <video class="w-100" controls playsinline webkit-playsinline preload="metadata">
-                                        <source src="{{ asset('upload/project' ~ i ~ '/' ~ projects[i].name) }}" type="video/{{ ext }}">
+                                <p style="font-size: 0.5rem;color:var(--color-primary)" class="text-center">//_{{ demos[i].media.name }}_//</p>
+                                {% if demos[i] is not null %}
+                                    {% set ext = demos[i].extension ?? 'mp4' %}
+                                <div class="lock-video-format">
+                                    <video class="w-100" controls playsinline webkit-playsinline preload="metadata"
+                                    {% if demos[i].thumbnail is not null %} poster="{{ asset('upload/thumbnail/' ~ demos[i].thumbnail.name) }}"{% endif %}>
+                                        <source src="{{ asset('upload/demo/' ~ demos[i].media.name) }}" type="video/{{ ext }}">
                                         This video seems unsupported by your browser
                                     </video>
+                                </div>
                                 {% else %}
                                     <p class="text-light text-center m-0">Aucun projet</p>
                                 {% endif %}
@@ -169,12 +172,17 @@
                 </div>
                 <div class="col-12 text-center social-links">
                     {% for social in bioSocials %}
-                        {% if social.network %}
-                        <a href="{{ social.link }}"><i class=" bi bi-{{ social.network}} fs-2"></i></a>
-                        {% else %}
-                        <a href="{{ social.link }}"><i class=" bi bi-globe fs-2"></i></a>
-                        {% endif %}
+                        <a href="{{ social.link }}" class="social-icon">
+                            {% if social.network %}
+                                <i class="bi bi-{{ social.network }}"></i>
+                            {% elseif 'itch.io' in social.link %}
+                                {% include 'icons/itchio.svg' %}
+                            {% else %}
+                                <i class="bi bi-globe"></i>
+                            {% endif %}
+                        </a>
                     {% endfor %}
+
 {#                    <i class=" bi bi-github fs-2"></i>#}
 {#                    <i class=" bi bi-linkedin fs-2"></i>#}
 {#                    <i class=" bi bi-instagram fs-2"></i>#}

@@ -201,19 +201,7 @@
             return $socials;
         }
 
-        public function getVentures()
-        {
-            $ventures = $this->em->getRepository(Venture::class)->findBy([], ['spot' => 'ASC']);
 
-            if(!$ventures){
-                return [];
-            }
-            $array = [];
-            foreach ($ventures as $venture) {
-                $array[$venture->getId()] = $venture;
-            }
-            return $array;
-        }
 
         public function getAboutText() :array{
             $about = $this->em->getRepository(Setting::class)->findAboutText();

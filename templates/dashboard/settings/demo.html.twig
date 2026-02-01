@@ -1,0 +1,69 @@
+<turbo-stream action="replace" target="dashboard">
+    <template>
+        <div id="dashboard">
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+
+                        <h2 class="mb-4 text-center">
+                            {% if demo is defined and demo.id is not null %}
+                                Modifier la démo {{ demo.id }}
+                            {% else %}
+                                Créer une démo
+                            {% endif %}
+
+                        </h2>
+
+                        {{ form_start(form, {
+                            'action': path('app_settings_demo', {'id': demo.id}),
+                            'attr': {'data-turbo': 'true'}
+                        }) }}
+                        <div class="mb-3">
+                            {{ form_label(form.title) }}
+                            {{ form_widget(form.title, { attr: { class: 'form-control' } }) }}
+                            {{ form_errors(form.title) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.media) }}
+                            {{ form_widget(form.media, { attr: { class: 'form-select' } }) }}
+                            {{ form_errors(form.media) }}
+
+                            {% if demo is defined and demo.media is not null %}
+                                <video class="w-100 mt-5" controls playsinline webkit-playsinline preload="metadata">
+                                    <source src="{{ asset('upload/demo/' ~ demo.media.name) }}" type="video/{{ demo.media.name|split('.')|last }}">
+                                    This video seems unsupported by your browser
+                                </video>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(form.thumbnail) }}
+                            {{ form_widget(form.thumbnail, { attr: { class: 'form-select' } }) }}
+                            {{ form_errors(form.thumbnail) }}
+
+                            {% if demo is defined and demo.thumbnail is not null %}
+                                <img src="{{ asset('upload/thumbnail/' ~ demo.thumbnail.name) }}" alt="Thumbnail" class="img-fluid mt-5">
+                            {% endif %}
+                        </div>
+
+
+
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <a href="{{ path('app_dashboard') }}" class="btn btn-outline-secondary">
+                                Annuler
+                            </a>
+
+                            <button class="btn btn-primary">
+                                Enregistrer
+                            </button>
+                        </div>
+
+                        {{ form_end(form) }}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</turbo-stream>

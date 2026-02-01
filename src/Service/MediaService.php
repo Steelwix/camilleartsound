@@ -11,14 +11,18 @@
 
     #[AllowDynamicProperties] class MediaService extends SettingService
     {
-        public function __construct(MediaFactory $mediaFactory, EntityManagerInterface $em, #[Autowire('%upload_directory%')] $uploadDirectory)
-        {
+        public function __construct(
+            MediaFactory $mediaFactory,
+            EntityManagerInterface $em,
+            #[Autowire('%upload_directory%')] $uploadDirectory
+        ) {
             $this->mediaFactory = $mediaFactory;
             $this->em = $em;
             $this->uploadDirectory = $uploadDirectory;
         }
 
-        public function createMedia($file, $spot) {
+        public function createMedia($file, $spot, $replace = true)
+        {
             $newFilename = md5(uniqid()) . '.' . $file->guessExtension();
             $targetDirectory = $this->uploadDirectory . "/$spot/";
 
@@ -27,7 +31,9 @@
                 $newFilename
             );
 
+            if($replace){
             $this->globalRemoveSpotMedia($spot);
+            }
 
             $media = $this->mediaFactory->create([
                 'name' => $newFilename,
@@ -37,7 +43,18 @@
             return $media;
         }
 
-        public function globalRemoveSpotMedia($spot) :int {
+        public function globalRemoveMedia(Media $media): void
+        {
+            $targetDirectory = $this->uploadDirectory . "/" . $media->getType() . "/";
+            try {
+                unlink($targetDirectory . $media->getName());
+            }
+            catch (\Exception $e) {}
+            $this->em->remove($media);
+        }
+
+        public function globalRemoveSpotMedia($spot): int
+        {
             $qb = $this->em->createQueryBuilder();
             $qb->delete(Media::class, 'm')
                 ->where('m.type = :spot')
@@ -46,13 +63,14 @@
             return $qb->getQuery()->execute(); // retourne le nombre d'entités supprimées
         }
 
-        public function getMedia($spot) {
+        public function getMedia($spot)
+        {
             $qb = $this->em->createQueryBuilder();
             $qb->select('m.name')
                 ->from(Media::class, 'm')
                 ->where('m.type = :spot')
                 ->setParameter('spot', $spot)
-            ->orderBy('m.id', 'DESC');
+                ->orderBy('m.id', 'DESC');
 
             return $qb->getQuery()->getOneOrNullResult();
         }
@@ -61,17 +79,18 @@
         public function getProjects(): array
         {
             $projects = [];
-            for($i=1; $i<=$this->getProjectDisplay(); $i++){
-                $projects[$i] = $this->getMedia('project'.$i);
+            for ($i = 1; $i <= $this->getProjectDisplay(); $i++) {
+                $projects[$i] = $this->getMedia('project' . $i);
             }
             return $projects;
         }
 
+
         public function getAboutMedias(): array
         {
             $abouts = [];
-            for($i=1; $i<=$this->getAboutDisplay(); $i++){
-                $abouts[$i] = $this->getMedia('about'.$i);
+            for ($i = 1; $i <= $this->getAboutDisplay(); $i++) {
+                $abouts[$i] = $this->getMedia('about' . $i);
             }
             return $abouts;
         }

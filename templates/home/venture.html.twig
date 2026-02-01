@@ -43,7 +43,7 @@
 
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
-                    <a href="{{ path('app_home') }}" class="glitch-btn text-white m-5"
+                    <a href="{{ path('app_home') }}" data-turbo="false" class="glitch-btn text-white m-5"
                        data-text="BACK">Back</a>
 
                     {% if editMode == false %}
@@ -69,7 +69,7 @@
                                target="_blank"
                                class="stretched-link"></a>
 
-                            <div class="ui-frame-body bg-dark text-center"
+                            <div class="ui-frame-body text-center"
                                  style="min-height: 200px; --i: {{ loop.index }}">
 
                                 <img src="{{ asset('upload/venture' ~ venture.id ~ '/' ~ venture.media.name) }}"
@@ -77,8 +77,8 @@
                                      class="img-fluid rounded"
                                      style="max-height: 200px; object-fit: cover;">
 
-                                <div class="d-flex justify-content-between align-items-center mt-2">
-                                    <p class="m-0">{{ venture.label }}</p>
+                                <div class="justify-content-between align-items-center text-center mt-2">
+                                    <p style="font-family: 'Teko', sans-serif !important;font-size: 1.5rem;" class="text-center">{{ venture.label }}</p>
 
                                     {% if editMode %}
                                         <div class="d-flex gap-2" style="z-index:2;">

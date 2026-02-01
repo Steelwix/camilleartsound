@@ -399,7 +399,7 @@ a:hover .nav-link {
 
 .social-links a:hover {
     color: var(--color-primary);
-    text-shadow: 0 0 10px var(--color-primary), 0 0 20px var(--color-primary);
+    text-shadow: 0 0 1px var(--color-primary), 0 0 1px var(--color-primary);
 }
 
 
@@ -503,6 +503,11 @@ a:hover .nav-link {
 .ui-frame.is-visible {
     animation: ui-frame-in 0.2s ease-out forwards;
 }
+.ui-frame.is-visible:hover{
+    box-shadow:
+            0 8px 28px rgba(var(--color-primary-rgb), 0.25),
+            inset 0 0 0 1px rgba(var(--color-primary-rgb),0.35);
+}
 
 .ui-frame.is-visible::before,
 .ui-frame.is-visible::after {
@@ -532,8 +537,8 @@ a:hover .nav-link {
 .ui-frame video {
     opacity: 0;
     transform: scale(0.97);
-    animation: ui-frame-in 0.2s ease-out forwards;
-    animation-delay: 1s;
+    animation: ui-frame-in 0.1s ease-out forwards;
+    animation-delay: 0.5s;
 }
 
 @keyframes ui-frame-in {
@@ -548,6 +553,54 @@ a:hover .nav-link {
         opacity: 1;
         transform: scale(1);
     }
+}
+
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 2.5rem;
+    height: 2.5rem;
+
+    color: var(--color-primary);
+    text-decoration: none;
+
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Bootstrap icons */
+.social-icon i {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+/* SVG inline */
+.social-icon svg {
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor; /* 🔥 clé absolue */
+}
+
+/* hover cohérent */
+.social-icon:hover {
+    color: var(--color-tertiary);
+    transform: scale(1.1);
+}
+
+.lock-video-format {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+    border-radius: 6px;
+}
+
+.lock-video-format video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* remplit proprement */
+    display: block;
 }
 
 

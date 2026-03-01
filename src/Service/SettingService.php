@@ -82,7 +82,7 @@
             if (!$text) {
                 return['title1'=>'', 'text1'=>'', 'title2'=>'', 'text2'=>'', 'title3'=>'', 'text3'=>''];
             }
-            return json_decode($text->getValue());
+            return json_decode($text->getValue(),true);
         }
 
         public function manageContacts($formContacts): void

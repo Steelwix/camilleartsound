@@ -112,9 +112,12 @@
             $data = $this->settingService->getBioTexts();
             $form = $this->createForm(BioTextType::class, null, [
                 'data' => [
-                    'text1' => $data[0] ?? null,
-                    'text2' => $data[1] ?? null,
-                    'text3' => $data[2] ?? null,
+                    'text1' => $data['text1'] ?? null,
+                    'text2' => $data['text2'] ?? null,
+                    'text3' => $data['text3'] ?? null,
+                    'title1' => $data['title1'] ?? null,
+                    'title2' => $data['title2'] ?? null,
+                    'title3' => $data['title3'] ?? null,
                 ],
             ]);
             $form->handleRequest($request);

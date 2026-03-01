@@ -8,9 +8,23 @@
                 'attr': {'data-turbo': 'true'}
             }) }}
 
-            {{ form_widget(form.text) }}
+            {{ form_widget(form.text1) }}
+            {{ form_widget(form.text2) }}
+            {{ form_widget(form.text3) }}
 {#                input sert a bait le form symfony pour lui injecter les datas#}
-            <trix-editor input="bio_text_text"></trix-editor>
+            <h5>Cadre Bio 1 (principal)</h5>
+            {{ form_widget(form.title1) }}
+            <trix-editor input="bio_text_text1"></trix-editor>
+            <br>
+            <h5>Cadre Bio 2</h5>
+            {{ form_widget(form.title2) }}
+
+            <trix-editor input="bio_text_text2"></trix-editor>
+            <br>
+            <h5>Cadre Bio 3</h5>
+            {{ form_widget(form.title3) }}
+
+            <trix-editor input="bio_text_text3"></trix-editor>
 
             {{ form_end(form) }}
         </div>

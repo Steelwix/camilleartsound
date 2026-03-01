@@ -320,7 +320,7 @@ trix-editor {
 #canvas {
     position: relative;
     width: 100vw;
-    height: 75vh;
+    height: 100vh;
     z-index: 10;
 }
 
@@ -341,7 +341,14 @@ trix-editor {
     z-index: 20;
     cursor: grab;
 }
-
+#nodeC {
+    z-index: 20;
+    cursor: grab;
+}
+#nodeD {
+    z-index: 20;
+    cursor: grab;
+}
 /* SVG */
 #links {
     position: absolute;

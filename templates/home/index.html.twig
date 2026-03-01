@@ -76,7 +76,7 @@
                             <div class="ui-frame-body" style="min-height: 200px; --i: {{ i }}">
                                 <p style="font-size: 0.5rem;color:var(--color-primary)" class="text-center">//_{{ demos[i].media.name }}_//</p>
                                 {% if demos[i] is not null %}
-                                    {% set ext = demos[i].extension ?? 'mp4' %}
+                                    {% set ext = demos[i].media.name|split('.')|last|lower %}
                                 <div class="lock-video-format">
                                     <video class="w-100" controls playsinline webkit-playsinline preload="metadata"
                                     {% if demos[i].thumbnail is not null %} poster="{{ asset('upload/thumbnail/' ~ demos[i].thumbnail.name) }}"{% endif %}>
@@ -112,14 +112,35 @@
                      style="width: 100%; aspect-ratio: 1/1; object-fit: cover;">
             </div>
 
-            <div id="nodeB" class="node cp-block" style="max-width: 60vh;">
-                <h5 class="cp-title">Camille Saby</h5>
-                <p id="anchor" class="cp-video cp-frame">{{ bioText|raw }}</p>
+            <div id="nodeB" class="node cp-block" style="max-width: 40vh;">
+                <h5 class="cp-title">{{ bioTexts.title1 }}</h5>
+                <p id="anchor" class="cp-video cp-frame">{{ bioTexts.text1|raw }}</p>
             </div>
 
-            <svg id="links">
-                <defs>
+            <div id="nodeC" class="node cp-block" style="max-width: 40vh;">
+                <h5 class="cp-title">{{ bioTexts.title2 }}</h5>
+                <p id="anchorC" class="cp-video cp-frame">
+                    {{ bioTexts.text2|raw }}
+                </p>
+            </div>
 
+            <div id="nodeD" class="node cp-block" style="max-width: 40vh;">
+                <h5 class="cp-title">{{ bioTexts.title3 }}</h5>
+                <p id="anchorD" class="cp-video cp-frame">
+                    {{ bioTexts.text3|raw }}
+                </p>
+            </div>
+            <svg id="links"
+                 style="
+        position:absolute;
+        inset:0;
+        width:100%;
+        height:100%;
+        pointer-events:none;
+        z-index:15;
+     ">
+
+                <defs>
                     <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
                         <feGaussianBlur stdDeviation="6" result="blur1"/>
                         <feGaussianBlur stdDeviation="12" result="blur2"/>
@@ -131,10 +152,10 @@
                     </filter>
                 </defs>
 
+                <line id="linkB" stroke="#fffc00" stroke-width="2" filter="url(#neon-glow)" />
+                <line id="linkC" stroke="#fffc00" stroke-width="2" filter="url(#neon-glow)" />
+                <line id="linkD" stroke="#fffc00" stroke-width="2" filter="url(#neon-glow)" />
 
-                <line id="link-glow" />
-
-                <line id="link" filter="url(#neon-glow)" />
             </svg>
         </div>
 
@@ -150,11 +171,22 @@
                 </div>
 
                 <div class="col-6 mt-3">
-                    <div id="nodeB" class="node cp-block">
-                        <h5 class="cp-title">Camille Saby</h5>
-                        <p id="anchor" class="cp-video cp-frame">{{ bioText|raw }}</p>
+                    <div id="nodeB2" class="node cp-block">
+                        <h5 class="cp-title">{{ bioTexts.title1 }}</h5>
+                        <p id="anchor" class="cp-video cp-frame">{{ bioTexts.text1|raw }}</p>
+                    </div>
+
+                    <div id="nodeC2" class="node cp-block">
+                        <h5 class="cp-title">{{ bioTexts.title2 }}</h5>
+                        <p id="anchor" class="cp-video cp-frame">{{ bioTexts.text2|raw }}</p>
+                    </div>
+
+                    <div id="nodeD2" class="node cp-block">
+                        <h5 class="cp-title">{{ bioTexts.title3 }}</h5>
+                        <p id="anchor" class="cp-video cp-frame">{{ bioTexts.text3|raw }}</p>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -203,191 +235,224 @@
 
     <script>
         (() => {
-        /* ========================
-           RÉFÉRENCES DOM
-        ======================== */
-        const canvas = document.getElementById("canvas");
-        const nodeA  = document.getElementById("nodeA");
-        const nodeB  = document.getElementById("nodeB");
-        const anchor = document.getElementById("anchor");
-        const line   = document.getElementById("link");
 
-        /* ========================
-           CONFIG
-        ======================== */
-        const MIN_DISTANCE = 500;
+            /* ===============================
+               RÉCUPÉRATION DES ÉLÉMENTS DOM
+            =============================== */
 
-        /* ========================
-           DRAG STATE
-        ======================== */
-        let dragging = false;
-        let offsetX = 0;
-        let offsetY = 0;
+            const canvas = document.getElementById("canvas");
+            if (!canvas) return; // sécurité si jamais le canvas n'existe pas
 
-        /* ========================
-           POSITIONS INITIALES
-        ======================== */
-        nodeA.style.left = "200px";
-        nodeA.style.top  = "300px";
-        nodeB.style.left = "500px";
-        nodeB.style.top  = "150px";
+            const nodeA = document.getElementById("nodeA"); // photo centrale
+            const nodeB = document.getElementById("nodeB");
+            const nodeC = document.getElementById("nodeC");
+            const nodeD = document.getElementById("nodeD");
+
+            const anchorB = document.getElementById("anchor");   // point d’attache B
+            const anchorC = document.getElementById("anchorC");  // point d’attache C
+            const anchorD = document.getElementById("anchorD");  // point d’attache D
+
+            const linkB = document.getElementById("linkB");
+            const linkC = document.getElementById("linkC");
+            const linkD = document.getElementById("linkD");
+
+            const MIN_DISTANCE = 150; // distance minimale entre centre photo et nodes
+
+            /* ===============================
+               INTERSECTION OBSERVER (animation)
+            =============================== */
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         setTimeout(() => {
-                            entry.target.classList.add("is-visible");
+                            entry.target.classList.add("is-visible"); // déclenche animation
                             observer.unobserve(entry.target); // une seule fois
-                        }, 300); // 0.3s
+                        }, 300);
                     }
                 });
-            }, {
-                threshold: 0.3
+            }, { threshold: 0.3 });
+
+            document.querySelectorAll(".ui-frame").forEach(el => {
+                observer.observe(el);
             });
 
-        document.querySelectorAll(".ui-frame").forEach(el => {
-            observer.observe(el);
-        });
-        /* ========================
-           DRAG START (B UNIQUEMENT)
-        ======================== */
-        document.addEventListener("mousedown", (e) => {
-            const target = e.target.closest("#nodeB");
-            if (!target) return;
+            /* ===============================
+               SYSTÈME DE DRAG (stable)
+            =============================== */
 
-            dragging = true;
-            offsetX = e.clientX - nodeB.offsetLeft;
-            offsetY = e.clientY - nodeB.offsetTop;
-        });
+            let dragging = null;      // élément actuellement déplacé
+            let startX = 0;           // position souris au moment du clic
+            let startY = 0;
+            let originLeft = 0;       // position initiale du node
+            let originTop = 0;
 
-        /* ========================
-           DRAG MOVE
-        ======================== */
-        document.addEventListener("mousemove", (e) => {
-            if (!dragging) return;
+            /* ----- DÉBUT DU DRAG ----- */
+            document.addEventListener("mousedown", (e) => {
 
-            const rectCanvas = canvas.getBoundingClientRect();
-            const rectA = nodeA.getBoundingClientRect();
+                // Vérifie si on clique sur un node
+                const target = e.target.closest("#nodeB, #nodeC, #nodeD");
+                if (!target) return;
 
-            let x = e.clientX - offsetX;
-            let y = e.clientY - offsetY;
+                dragging = target;
 
-            /* Clamp dans le canvas */
-            const minX = 0;
-            const minY = 0;
-            const maxX = rectCanvas.width - nodeB.offsetWidth;
-            const maxY = rectCanvas.height - nodeB.offsetHeight;
+                // On mémorise la position initiale de la souris
+                startX = e.clientX;
+                startY = e.clientY;
 
-            x = Math.min(Math.max(x, minX), maxX);
-            y = Math.min(Math.max(y, minY), maxY);
+                // On mémorise la position initiale du node
+                originLeft = dragging.offsetLeft;
+                originTop  = dragging.offsetTop;
+            });
 
-            /* Centre de A (viewport) */
-            const ax = rectA.left + rectA.width / 2;
-            const ay = rectA.top  + rectA.height / 2;
+            /* ----- MOUVEMENT ----- */
+            document.addEventListener("mousemove", (e) => {
+                if (!dragging) return;
 
-            /* Centre potentiel de B (viewport) */
-            const bx = x + rectCanvas.left + nodeB.offsetWidth / 2;
-            const by = y + rectCanvas.top  + nodeB.offsetHeight / 2;
+                const rectCanvas = canvas.getBoundingClientRect();
+                const rectA = nodeA.getBoundingClientRect();
 
-            const dx = bx - ax;
-            const dy = by - ay;
-            const dist = Math.hypot(dx, dy);
+                // Calcul du déplacement réel de la souris
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
 
-            /* Distance minimale */
-            if (dist < MIN_DISTANCE) return;
+                // Nouvelle position = position initiale + déplacement souris
+                let newLeft = originLeft + dx;
+                let newTop  = originTop  + dy;
 
-            nodeB.style.left = x + "px";
-            nodeB.style.top  = y + "px";
+                // Limite dans le canvas
+                const maxX = rectCanvas.width  - dragging.offsetWidth;
+                const maxY = rectCanvas.height - dragging.offsetHeight;
 
-            updateLine();
-        });
+                console.log("newTop = " + newTop);
+                newLeft = Math.min(Math.max(newLeft, 0), maxX);
+                newTop  = Math.min(Math.max(newTop, 0), maxY);
 
-        /* ========================
-           DRAG END
-        ======================== */
-        document.addEventListener("mouseup", () => {
-            dragging = false;
-        });
+                /* --- DISTANCE MINIMALE PAR RAPPORT À LA PHOTO --- */
 
-        /* ========================
-           UPDATE LINE (CERCLE → RECTANGLE)
-        ======================== */
-        function updateLine() {
-            const rectA = nodeA.getBoundingClientRect();
-            const rectB = anchor.getBoundingClientRect();
-            const rectC = canvas.getBoundingClientRect();
+                // const ax = rectA.left + rectA.width / 2;
+                // const ay = rectA.top  + rectA.height / 2;
+                //
+                // const bx = newLeft + rectCanvas.left + dragging.offsetWidth / 2;
+                // const by = newTop  + rectCanvas.top  + dragging.offsetHeight / 2;
+                //
+                // const dist = Math.hypot(bx - ax, by - ay);
+                // if (dist < MIN_DISTANCE) return;
 
-            /* Centres (coordonnées canvas) */
-            const ax = rectA.left + rectA.width  / 2 - rectC.left;
-            const ay = rectA.top  + rectA.height / 2 - rectC.top;
+                // Application position
+                dragging.style.left = newLeft + "px";
+                dragging.style.top  = newTop  + "px";
 
-            const bx = rectB.left + rectB.width  / 2 - rectC.left;
-            const by = rectB.top  + rectB.height / 2 - rectC.top;
+                updateAllLines();
+            });
 
-            /* Direction */
-            const dx = bx - ax;
-            const dy = by - ay;
+            /* ----- FIN DU DRAG ----- */
+            document.addEventListener("mouseup", () => {
+                dragging = null;
+            });
 
-            const len = Math.hypot(dx, dy);
-            if (len === 0) return;
+            /* ===============================
+               SYSTÈME DE LIGNES (photo → nodes)
+            =============================== */
 
-            const ux = dx / len;
-            const uy = dy / len;
+            function updateLine(anchor, line) {
 
-            /* --- A : cercle --- */
-            const rA = rectA.width / 2;
+                if (!anchor || !line) return;
 
-            const startX = ax + ux * rA;
-            const startY = ay + uy * rA;
+                const rectA = nodeA.getBoundingClientRect();
+                const rectB = anchor.getBoundingClientRect();
+                const rectC = canvas.getBoundingClientRect();
 
-            /* --- B : rectangle (anchor) --- */
-            const halfW = rectB.width  / 2;
-            const halfH = rectB.height / 2;
+                // Centre photo
+                const ax = rectA.left + rectA.width  / 2 - rectC.left;
+                const ay = rectA.top  + rectA.height / 2 - rectC.top;
 
-            const tx = halfW / Math.abs(ux);
-            const ty = halfH / Math.abs(uy);
-            const t  = Math.min(tx, ty);
+                // Centre du bloc cible
+                const bx = rectB.left + rectB.width  / 2 - rectC.left;
+                const by = rectB.top  + rectB.height / 2 - rectC.top;
 
-            const endX = bx - ux * t;
-            const endY = by - uy * t;
+                const dx = bx - ax;
+                const dy = by - ay;
 
-            /* SVG update */
-            line.setAttribute("x1", startX);
-            line.setAttribute("y1", startY);
-            line.setAttribute("x2", endX);
-            line.setAttribute("y2", endY);
-        }
+                const len = Math.hypot(dx, dy);
+                if (!len) return;
 
-        function setInitialPositions() {
-            const rectCanvas = canvas.getBoundingClientRect();
+                const ux = dx / len;
+                const uy = dy / len;
 
-            /* PHOTO (A) : légèrement à gauche */
-            const aX = rectCanvas.width * 0.25 - nodeA.offsetWidth / 2;
-            const aY = rectCanvas.height * 0.3;
+                const rA = rectA.width / 2;
 
-            const bX = rectCanvas.width * 0.65 - nodeB.offsetWidth / 2; //distance X entre photo et texte
-            const bY = rectCanvas.height * 0.42; //distance Y entre photo et texte
+                // Point de départ = bord du cercle
+                const startX = ax + ux * rA;
+                const startY = ay + uy * rA;
 
-            nodeA.style.left = `${aX}px`;
-            nodeA.style.top  = `${aY}px`;
+                // Intersection rectangle
+                const halfW = rectB.width  / 2;
+                const halfH = rectB.height / 2;
 
-            nodeB.style.left = `${bX}px`;
-            nodeB.style.top  = `${bY}px`;
-        }
+                const tx = Math.abs(ux) > 0.0001 ? halfW / Math.abs(ux) : Infinity;
+                const ty = Math.abs(uy) > 0.0001 ? halfH / Math.abs(uy) : Infinity;
 
+                const t = Math.min(tx, ty);
 
+                const endX = bx - ux * t;
+                const endY = by - uy * t;
 
-        /* ========================
-           INIT
-        ======================== */
-        window.addEventListener("load", () => {
-            setInitialPositions();
-            updateLine();
-        });
+                line.setAttribute("x1", startX);
+                line.setAttribute("y1", startY);
+                line.setAttribute("x2", endX);
+                line.setAttribute("y2", endY);
+            }
 
-        window.addEventListener("resize", () => {
-            setInitialPositions();
-            updateLine();
-        });
+            function updateAllLines() {
+                updateLine(anchorB, linkB);
+                updateLine(anchorC, linkC);
+                updateLine(anchorD, linkD);
+            }
+
+            /* ===============================
+               POSITION INITIALE DES BLOCS
+            =============================== */
+
+            function setInitialPositions() {
+
+                const rectCanvas = canvas.getBoundingClientRect();
+
+                const centerX = rectCanvas.width / 2;
+                const centerY = rectCanvas.height / 2;
+                const sideOffsetY = -40;
+
+                // Photo centrée
+                nodeA.style.left = centerX - nodeA.offsetWidth / 2 + 10 + "px";
+                nodeA.style.top  = centerY - nodeA.offsetHeight / 2 + "px";
+
+                // Bloc du haut
+                nodeB.style.left = centerX - nodeB.offsetWidth / 2 + "px";
+                nodeB.style.top  = centerY - nodeA.offsetHeight / 2 - nodeB.offsetHeight - 80 + "px";
+
+                // Bloc gauche
+                nodeC.style.left = centerX - nodeA.offsetWidth / 2 - nodeC.offsetWidth - 120 + "px";
+                nodeC.style.top  = centerY + sideOffsetY + "px";
+
+                // Bloc droite
+                nodeD.style.left = centerX + nodeA.offsetWidth / 2 + 120 + "px";
+                nodeD.style.top  = centerY + sideOffsetY + "px";
+            }
+
+            /* ===============================
+               INIT + RESIZE
+            =============================== */
+
+            window.addEventListener("load", () => {
+                setInitialPositions();
+                updateAllLines();
+            });
+
+            window.addEventListener("resize", () => {
+                setInitialPositions();
+                updateAllLines();
+            });
+
         })();
     </script>
 

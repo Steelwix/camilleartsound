@@ -57,9 +57,13 @@
             $this->em->flush();
         }
 
-        public function manageBioText($rawHtmlText): void
+        public function manageBioText($formDatas): void
         {
-            $cleanHtmlText = preg_replace('#^<div>(.*)</div>$#s', '$1', $rawHtmlText);
+            foreach ($formDatas as $key => $rawHtmlText) {
+                $cleanHtmlText = preg_replace('#^<div>(.*)</div>$#s', '$1', $rawHtmlText);
+                $texts[$key] = $cleanHtmlText;
+
+            }
             $text = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'text']);
             if (!$text) {
                 $text = new Setting();
@@ -68,18 +72,17 @@
                 $this->em->persist($text);
             }
 
-            $text->setValue($cleanHtmlText);
-            $this->em->flush();
+            $text->setValue(json_encode($texts));
             return;
         }
 
-        public function getBioText()
+        public function getBioTexts()
         {
             $text = $this->em->getRepository(Setting::class)->findOneBy(['type' => 'bio', 'label' => 'text']);
             if (!$text) {
-                return '';
+                return['title1'=>'', 'text1'=>'', 'title2'=>'', 'text2'=>'', 'title3'=>'', 'text3'=>''];
             }
-            return $text->getValue();
+            return json_decode($text->getValue());
         }
 
         public function manageContacts($formContacts): void

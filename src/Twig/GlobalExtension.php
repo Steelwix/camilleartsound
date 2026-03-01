@@ -34,7 +34,7 @@
                 'projectDisplay' => $this->settingService->getProjectDisplay(),
                 'projectPerRow' => $this->settingService->getProjectPerRow(),
                 'demos' => $this->demoService->getDemos(),
-                'bioText' => $this->settingService->getBioText(),
+                'bioTexts' => $this->settingService->getBioTexts(),
                 'bioImage' => $this->mediaService->getMedia('bio'),
                 'bioContacts' => $this->settingService->getBioContacts(),
                 'bioMail' => $this->settingService->getBioMail(),

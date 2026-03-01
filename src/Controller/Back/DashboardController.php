@@ -55,14 +55,6 @@
             $media = $this->mediaService->getMedia($spot);
             $form = $this->createForm(MediaType::class, $media);
             $form->handleRequest($request);
-//            dd(
-//                $form->isSubmitted(),
-//                $form->isValid(),
-//                $form->get('media')->getErrors(true),
-//                $form->getErrors(true),
-//                $request->files->all(), // important si tu uploades un fichier
-//                $request->request->all()
-//            );
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->mediaService->createMedia($form->get('media')->getData(), $spot);
                 $this->em->flush();
@@ -117,12 +109,19 @@
         #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les droits suffisants pour intéragir avec cette route')]
         public function settingsBioText(Request $request)
         {
-            $bio = $this->settingService->getBioText();
-            $form = $this->createForm(BioTextType::class, ["text" => $bio]);
+            $data = $this->settingService->getBioTexts();
+            $form = $this->createForm(BioTextType::class, null, [
+                'data' => [
+                    'text1' => $data[0] ?? null,
+                    'text2' => $data[1] ?? null,
+                    'text3' => $data[2] ?? null,
+                ],
+            ]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->settingService->manageBioText($form->get('text')->getData());
+                $this->settingService->manageBioText($form->getData());
+                $this->em->flush();
                 return $this->redirectToRoute('app_dashboard');
             }
             $request->setRequestFormat(TurboBundle::STREAM_FORMAT);

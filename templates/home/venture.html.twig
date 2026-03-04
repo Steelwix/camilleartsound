@@ -81,9 +81,9 @@
                                     <p style="font-family: 'Teko', sans-serif !important;font-size: 1.5rem;" class="text-center">{{ venture.label }}</p>
 
                                     {% if editMode %}
-                                        <div class="d-flex gap-2" style="z-index:2;">
+                                        <div class="d-flex gap-2">
                                             <a href="{{ path('app_home_venture_edit_edit', {'id': venture.id}) }}"
-                                               class="btn btn-sm btn-outline-light">
+                                               class="btn btn-sm btn-outline-light" style="z-index: 10">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
 
@@ -92,8 +92,8 @@
                             </span>
 
                                             <a href="{{ path('app_home_venture_edit_delete', {'id': venture.id}) }}"
-                                               class="btn btn-sm btn-outline-danger">
-                                                <i class="bi bi-trash"></i>
+                                               class="btn btn-sm btn-outline-danger" style="z-index: 10">
+                                                <i class="bi bi-trash" ></i>
                                             </a>
                                         </div>
                                     {% endif %}

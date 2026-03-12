@@ -295,14 +295,12 @@
                 if (!target) return;
 
                 dragging = target;
-
                 // On mémorise la position initiale de la souris
                 startX = e.clientX;
                 startY = e.clientY;
-
                 // On mémorise la position initiale du node
-                originLeft = dragging.offsetLeft;
-                originTop  = dragging.offsetTop;
+                originLeft = parseFloat(dragging.style.left) || 0;
+                originTop  = parseFloat(dragging.style.top)  || 0;
             });
 
             /* ----- MOUVEMENT ----- */
@@ -320,16 +318,16 @@
                 let newLeft = originLeft + dx;
                 let newTop  = originTop  + dy;
 
+
                 // Limite dans le canvas
                 const maxX = rectCanvas.width  - dragging.offsetWidth;
                 const maxY = rectCanvas.height - dragging.offsetHeight;
 
-                console.log("newTop = " + newTop);
                 newLeft = Math.min(Math.max(newLeft, 0), maxX);
                 newTop  = Math.min(Math.max(newTop, 0), maxY);
 
                 /* --- DISTANCE MINIMALE PAR RAPPORT À LA PHOTO --- */
-
+                //Non fonctionnel
                 // const ax = rectA.left + rectA.width / 2;
                 // const ay = rectA.top  + rectA.height / 2;
                 //
